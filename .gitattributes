@@ -1,2 +1,3 @@
 *.cshtml linguistic-language=C#
 *.cs linguistic-language=C#
+*.html linguistic-detectable=false
