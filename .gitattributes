@@ -1,5 +1,5 @@
-*.cs linguistic-detectable=true
-*.cshtml linguistic-detectable=true
-*.html linguistic-detectable=false
-*.cshtml linguistic-language=C#
-*.cs linguistic-language=C#
+packages/* linguist-vendored
+BuildProcessTemplates/* linguist-vendored
+EuFaco/Content/* linguist-vendored
+EuFaco/fonts/* linguist-vendored
+EuFaco/Scripts/* linguist-vendored
