@@ -1,3 +1,5 @@
+*.cs linguistic-detectable=true
+*.cshtml linguistic-detectable=true
+*.html linguistic-detectable=false
 *.cshtml linguistic-language=C#
 *.cs linguistic-language=C#
-*.html linguistic-detectable=false
