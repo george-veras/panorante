@@ -1,0 +1,149 @@
+﻿@{
+    ViewBag.Title = "Pergunta";
+    Layout = null;
+}
+
+@using EuFaco.DataAccess.Models
+@model Pergunta
+
+
+    <h4 class="list-group-item-heading">Autor: @Model.Autor.Nome</h4>
+    <p class="list-group-item-text">
+        <h4>@Model.Titulo</h4>
+        <span>@Model.Texto</span>
+        <br>
+        <button id="@String.Format("btn{0}", Model.Id)" type="button" class="btn btn-default btn-md" onclick="@String.Format("abrirMensagem({0});", Model.Id)">
+            <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+            Responder
+        </button>
+        <div id="@String.Format("divMensagem{0}", Model.Id)" style="display: none">
+            <form>
+                <span>Mensagem:</span>
+                <input id="@String.Format("txtResposta{0}", Model.Id)" type="text" value="" />
+                <br>
+                <input type="button" value="Cancelar" onclick="@String.Format("cancelar({0});", Model.Id)" />
+                <input type="button" value="Enviar" onclick="@String.Format("enviar({0});", Model.Id)" />
+                <br>
+            </form>
+        </div>
+                    
+        <div id="listaRespostas">
+        @if (Model.Respostas != null)
+        {
+            foreach (Resposta resposta in Model.Respostas)
+            {
+                <div class="media">
+                    <div class="media-left">
+                        <a>
+                            <img class="media-object" data-src="holder.js/64x64" alt="64x64" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+PCEtLQpTb3VyY2UgVVJMOiBob2xkZXIuanMvNjR4NjQKQ3JlYXRlZCB3aXRoIEhvbGRlci5qcyAyLjYuMC4KTGVhcm4gbW9yZSBhdCBodHRwOi8vaG9sZGVyanMuY29tCihjKSAyMDEyLTIwMTUgSXZhbiBNYWxvcGluc2t5IC0gaHR0cDovL2ltc2t5LmNvCi0tPjxkZWZzPjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+PCFbQ0RBVEFbI2hvbGRlcl8xNTE1ZTMyNWI2NSB0ZXh0IHsgZmlsbDojQUFBQUFBO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1mYW1pbHk6QXJpYWwsIEhlbHZldGljYSwgT3BlbiBTYW5zLCBzYW5zLXNlcmlmLCBtb25vc3BhY2U7Zm9udC1zaXplOjEwcHQgfSBdXT48L3N0eWxlPjwvZGVmcz48ZyBpZD0iaG9sZGVyXzE1MTVlMzI1YjY1Ij48cmVjdCB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIGZpbGw9IiNFRUVFRUUiLz48Zz48dGV4dCB4PSIxNC41IiB5PSIzNi41Ij42NHg2NDwvdGV4dD48L2c+PC9nPjwvc3ZnPg==" data-holder-rendered="true" style="width: 64px; height: 64px;">
+                        </a>
+                    </div>
+                    <div class="media-body">
+                        <h4 class="media-heading">@resposta.Autor.Nome              @resposta.DataHoraRespondida</h4>
+                        @resposta.Texto
+
+                        <input type="button" id="@String.Format("btnAbrirComentario{0}", resposta.Id)" value="Comentar" onclick="@String.Format("abrirComentario({0});", resposta.Id)"/>
+                        <div id="@String.Format("divComentarioResposta{0}", resposta.Id)" style="display: none">
+                            <form>
+                                <span>Mensagem:</span>
+                                <input id="@String.Format("txtComentarioResposta{0}", resposta.Id)" type="text" value="" />
+                                <br>
+                                <input type="button" value="Cancelar" onclick="@String.Format("cancelarComentario({0});", resposta.Id)" />
+                                <input type="button" value="Enviar" onclick="@String.Format("enviarComentario({0});", resposta.Id)" />
+                                <br>
+                            </form>
+                        </div>
+
+                        @if (resposta.Comentarios.Count > 0)
+                        {
+                            foreach (var comentario in resposta.Comentarios)
+                            {
+                                <div class="media">
+                                    <div class="media-left">
+                                        <a href="#">
+                                            <img class="media-object" data-src="holder.js/64x64" alt="64x64" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+PCEtLQpTb3VyY2UgVVJMOiBob2xkZXIuanMvNjR4NjQKQ3JlYXRlZCB3aXRoIEhvbGRlci5qcyAyLjYuMC4KTGVhcm4gbW9yZSBhdCBodHRwOi8vaG9sZGVyanMuY29tCihjKSAyMDEyLTIwMTUgSXZhbiBNYWxvcGluc2t5IC0gaHR0cDovL2ltc2t5LmNvCi0tPjxkZWZzPjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+PCFbQ0RBVEFbI2hvbGRlcl8xNTE1ZTMyN2QwNSB0ZXh0IHsgZmlsbDojQUFBQUFBO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1mYW1pbHk6QXJpYWwsIEhlbHZldGljYSwgT3BlbiBTYW5zLCBzYW5zLXNlcmlmLCBtb25vc3BhY2U7Zm9udC1zaXplOjEwcHQgfSBdXT48L3N0eWxlPjwvZGVmcz48ZyBpZD0iaG9sZGVyXzE1MTVlMzI3ZDA1Ij48cmVjdCB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIGZpbGw9IiNFRUVFRUUiLz48Zz48dGV4dCB4PSIxNC41IiB5PSIzNi41Ij42NHg2NDwvdGV4dD48L2c+PC9nPjwvc3ZnPg==" data-holder-rendered="true" style="width: 64px; height: 64px;">
+                                        </a>
+                                    </div>
+                                    <div class="media-body">
+                                        <h4 class="media-heading">@comentario.Autor.Nome               @comentario.DataHoraComentada.ToString("dd/MM/yyyy HH:mm")</h4>
+                                        @comentario.Texto
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            }
+        }
+        </div>
+    </p>
+
+<script>
+    function abrirMensagem(n) {
+        var id = '#divMensagem' + n;
+        var idbtn = '#btn' + n;
+        $(idbtn).hide();
+        $(id).show();
+    }
+
+    function abrirComentario(n) {
+        var id = '#divComentarioResposta' + n;
+        var idbtn = '#btnAbrirComentario' + n;
+        $(idbtn).hide();
+        $(id).show();
+    }
+
+    function cancelar(n) {
+        var id = '#divMensagem' + n;
+        var idbtn = '#btn' + n;
+        $(id).hide();
+        $(idbtn).show();
+    }
+
+    function cancelarComentario(n) {
+        var id = '#divComentarioResposta' + n;
+        var idbtn = '#btnAbrirComentario' + n;
+        $(id).hide();
+        $(idbtn).show();
+    }
+
+    function enviar(n) {
+        var idtxt = '#txtResposta' + n;
+        resposta = {
+            IdPerguntaVinculada: n,
+            Texto: $(idtxt).val()
+        }
+        $.ajax({
+            url: '/Perguntas/SalvarResposta',
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(resposta),
+            success: function (respostaSalva) {
+                cancelar(n);
+                $("#listaRespostas").append('<div class="media"><div class="media-left"><a><img class="media-object" data-src="holder.js/64x64" alt="64x64" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+PCEtLQpTb3VyY2UgVVJMOiBob2xkZXIuanMvNjR4NjQKQ3JlYXRlZCB3aXRoIEhvbGRlci5qcyAyLjYuMC4KTGVhcm4gbW9yZSBhdCBodHRwOi8vaG9sZGVyanMuY29tCihjKSAyMDEyLTIwMTUgSXZhbiBNYWxvcGluc2t5IC0gaHR0cDovL2ltc2t5LmNvCi0tPjxkZWZzPjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+PCFbQ0RBVEFbI2hvbGRlcl8xNTE1ZTMyNWI2NSB0ZXh0IHsgZmlsbDojQUFBQUFBO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1mYW1pbHk6QXJpYWwsIEhlbHZldGljYSwgT3BlbiBTYW5zLCBzYW5zLXNlcmlmLCBtb25vc3BhY2U7Zm9udC1zaXplOjEwcHQgfSBdXT48L3N0eWxlPjwvZGVmcz48ZyBpZD0iaG9sZGVyXzE1MTVlMzI1YjY1Ij48cmVjdCB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIGZpbGw9IiNFRUVFRUUiLz48Zz48dGV4dCB4PSIxNC41IiB5PSIzNi41Ij42NHg2NDwvdGV4dD48L2c+PC9nPjwvc3ZnPg==" data-holder-rendered="true" style="width: 64px; height: 64px;"></a></div><div class="media-body"><h4 class="media-heading">' + respostaSalva.NomeAutor + '              ' + respostaSalva.DataResposta + '</h4>' + respostaSalva.Texto + '<input type="button" id="btnAbrirComentario' + respostaSalva.Id + '" value="Comentar" onclick="abrirComentario(' + respostaSalva.Id + ');"/><div id="divComentarioResposta' + respostaSalva.Id + '" style="display: none"><form><span>Mensagem:</span><input id="txtComentarioResposta' + respostaSalva.Id + '" type="text" value="" /><br><input type="button" value="Cancelar" onclick="cancelarComentario(' + respostaSalva.Id + ');" /><input type="button" value="Enviar" onclick="enviarComentario(' + respostaSalva.Id + ');" /><br></form></div></div></div>');
+                $(idtxt).val('');
+            }
+        });
+    }
+
+    function enviarComentario(n) {
+        var idtxt = '#txtComentarioResposta' + n;
+        comentario = {
+            IdRespostaComentada: n,
+            Texto: $(idtxt).val(),
+            IdRespostaComentada: n
+        }
+        $.ajax({
+            url: '/Perguntas/SalvarComentarioResposta',
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(comentario),
+            success: function (comentarioSalvo) {
+                var div = '#divComentarioResposta' + n;
+                $(div).after('<div class="media"><div class="media-left"><a href="#"><img class="media-object" data-src="holder.js/64x64" alt="64x64" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+PCEtLQpTb3VyY2UgVVJMOiBob2xkZXIuanMvNjR4NjQKQ3JlYXRlZCB3aXRoIEhvbGRlci5qcyAyLjYuMC4KTGVhcm4gbW9yZSBhdCBodHRwOi8vaG9sZGVyanMuY29tCihjKSAyMDEyLTIwMTUgSXZhbiBNYWxvcGluc2t5IC0gaHR0cDovL2ltc2t5LmNvCi0tPjxkZWZzPjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+PCFbQ0RBVEFbI2hvbGRlcl8xNTE1ZTMyN2QwNSB0ZXh0IHsgZmlsbDojQUFBQUFBO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1mYW1pbHk6QXJpYWwsIEhlbHZldGljYSwgT3BlbiBTYW5zLCBzYW5zLXNlcmlmLCBtb25vc3BhY2U7Zm9udC1zaXplOjEwcHQgfSBdXT48L3N0eWxlPjwvZGVmcz48ZyBpZD0iaG9sZGVyXzE1MTVlMzI3ZDA1Ij48cmVjdCB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIGZpbGw9IiNFRUVFRUUiLz48Zz48dGV4dCB4PSIxNC41IiB5PSIzNi41Ij42NHg2NDwvdGV4dD48L2c+PC9nPjwvc3ZnPg==" data-holder-rendered="true" style="width: 64px; height: 64px;"></a></div><div class="media-body"><h4 class="media-heading">' + comentarioSalvo.NomeAutor + '               ' + comentarioSalvo.DataHora + '</h4>' + comentarioSalvo.Texto + '</div></div>');
+                cancelarComentario(n);
+                $(idtxt).val('');
+            }
+        });
+    }
+</script>

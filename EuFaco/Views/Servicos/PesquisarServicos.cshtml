@@ -1,0 +1,66 @@
+﻿@{
+    ViewBag.Title = "Pesquisar Serviços";
+    Layout = null;
+}
+
+@using EuFaco.DataAccess.Models
+@model List<Servico>
+
+<div class="container be-detail-container">
+    <div class="row">
+        <div class="col-xs-12 col-md-3 left-feild">
+            <div class="be-vidget back-block">
+                <a class="btn full color-1 size-1 hover-1"><i class="fa fa-chevron-left"></i>voltar ao perfil</a>
+            </div>
+            <div class="be-vidget hidden-xs hidden-sm" id="scrollspy">
+                <h3 class="letf-menu-article">
+                    Choose Category
+                </h3>
+                <div class="creative_filds_block">
+                    <ul class="ul nav">
+                        <li><a href="blog-detail-2.htmlbasic-information">Basic Information</a></li>
+                        <li><a href="blog-detail-2.htmledit-password">Edit Password</a></li>
+                        <li><a href="blog-detail-2.htmlon-the-web">On The Web</a></li>
+                        <li><a href="blog-detail-2.htmlabout-me">About Me</a></li>
+                        <li><a href="blog-detail-2.htmlweb-references">Web References</a></li>
+                    </ul>
+                </div>
+                <a class="btn full color-1 size-1 hover-1" onclick="publicarProjeto();">publicar</a>
+            </div>
+
+        </div>
+        <div class="col-xs-12 col-md-9 _editor-content_">
+            <div class="affix-block" id="basic-information">
+                @if (Model.Count > 0)
+                {
+                    foreach (Servico servico in Model)
+                    {
+                        <div class="blog-post">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-7">
+                                    <a class="post-preview post-image" href="blog-detail.html"><img class="img-responsive img-full" src="~/Images/NRGNetwork/blog_1.jpg" alt=""></a>
+                                </div>
+                                <div class="col-xs-12 col-sm-5">
+                                    <div class="post-desc">
+                                        <div class="post-category">Concepts, Drawing</div>
+                                        <a class="post-label" href="blog-detail.html">@servico.Titulo</a>
+                                        <div class="post-text">@servico.Descricao</div>
+                                        <div class="author-post">
+                                            <img src="~/Images/NRGNetwork/a1.png" alt="" class="ava-author">
+                                            <span>by <a href="#">@servico.Solicitante.Nome</a>, @servico.DataHoraSolicitacao.ToString("dd/MM/yyyy")</span>
+                                        </div>
+                                        <div class="info-block">
+                                            <span><i class="fa fa-thumbs-o-up"></i> 360</span>
+                                            <span><i class="fa fa-eye"></i> 789</span>
+                                            <span><i class="fa fa-comment-o"></i> 20</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>

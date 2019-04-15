@@ -1,0 +1,39 @@
+﻿@{
+    ViewBag.Title = "Perfil";
+    Layout = "~/Views/Shared/_LayoutUsuarioParticular.cshtml";
+}
+
+@using EuFaco.DataAccess.Models
+@model UsuarioParticular 
+
+<!--Painel da foto e nome-->
+<div class="panel panel-default">
+    <div id="panelDadosGerais" class="panel-body">
+        <a id="edit" class="btn btn-default btn-sm margin-left-5 pull-right" 
+            data-action="disable" data-type="show-form" data-target="editPubData"
+            data-hide-target="pubData" data-options="show" data-params="noreset"
+            onclick="editarPubData();">
+            <span class="glyphicon glyphicon-pencil">
+            </span>
+        </a>
+        <img src="~/Images/picture.png" alt="..." style="width: 150px; height: 150px">
+        <span id="spanNome">@Model.Nome</span><br>
+        <span id="spanEmail">@Model.Email</span>
+        <br/>
+        <input id="txtLocalidade" type="text" value="Localidade" style="display:none" />
+        <br/>
+    </div>
+    <div id="editPubData" style="display:none" >
+        <form id="editarDadosPublicos">
+            <span>Nome:</span>
+            <input id="txtNomePubData" type="text" value="Nome" />
+            <br>
+            <span>Email:</span>
+            <input id="txtEmailPubData" type="text" value="Email" />
+            <br>
+            <input id="btnCancelPubData" type="button" value="Cancelar" onclick="cancelarPubData();" />
+            <input id="btnSubmitPubData" type="button" value="Salvar" onclick="salvarPubData();" />
+            <br>
+        </form>
+    </div>
+</div>

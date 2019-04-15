@@ -1,0 +1,63 @@
+﻿@{
+    ViewBag.Title = "Servico";
+    Layout = null;
+}
+
+@using EuFaco.DataAccess.Models
+@model Servico
+
+<h4 class="list-group-item-heading">Solicitante: @Model.Solicitante.Nome</h4>
+<p class="list-group-item-text">
+    <h4>@Model.Titulo</h4>
+    <span>@Model.Descricao</span>
+    <br>
+    <button id="@String.Format("btn{0}", Model.Id)" type="button" class="btn btn-default btn-md" onclick="@String.Format("abrirCandidatura({0});", Model.Id)">
+        <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+        Candidatar-se
+    </button>
+    <div id="@String.Format("divMensagem{0}", Model.Id)" style="display: none">
+        <form>
+            <span>Mensagem:</span>
+            <input id="@String.Format("txtMensagem{0}", Model.Id)" type="text" value="" />
+            <br>
+            <input type="button" value="Cancelar" onclick="@String.Format("cancelar({0});", Model.Id)" />
+            <input type="button" value="Enviar Candidatura" onclick="@String.Format("candidatar({0});", Model.Id)" />
+            <br>
+        </form>
+    </div>
+</p>
+
+<script>
+    function abrirCandidatura(n) {
+        var id = '#divMensagem' + n;
+        var idbtn = '#btn' + n;
+        $(idbtn).hide();
+        $(id).show();
+    }
+
+    function cancelar(n) {
+        var id = '#divMensagem' + n;
+        var idbtn = '#btn' + n;
+        $(id).hide();
+        $(idbtn).show();
+    }
+
+    function candidatar(n) {
+        var idtxt = '#txtMensagem' + n;
+        candidatura = {
+            IdServico: n,
+            Mensagem: $(idtxt).val()
+        }
+        $.ajax({
+            url: '/Servicos/Candidatar',
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(candidatura),
+            success: function (result) {
+                cancelar(n);
+                $(idtxt).val('');
+                alert("Candidatura realizada com sucesso! :)");
+            }
+        });
+    }
+</script>

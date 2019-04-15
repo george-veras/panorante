@@ -1,0 +1,310 @@
+﻿@{
+    ViewBag.Title = "Perfil";
+    Layout = "~/Views/Shared/_LayoutUsuarioProfissional.cshtml";
+}
+
+@model EuFaco.DataAccess.Models.UsuarioProfissional
+
+<!--Painel da foto e nome-->
+<div class="panel panel-default">
+    <div id="panelDadosGerais" class="panel-body">
+        <a id="edit" class="btn btn-default btn-sm margin-left-5 pull-right"
+            data-action="disable" data-type="show-form" data-target="editPubData" 
+            data-hide-target="pubData" data-options="show" data-params="noreset"
+            onclick="editarPubData();">
+            <span class="glyphicon glyphicon-pencil">
+            </span>
+        </a>
+        <img src="~/Images/picture.png" alt="..." style="width: 150px; height: 150px">
+        <span id="spanNome">@Model.Nome</span><br>
+        <span id="spanEmail">@Model.Email</span><br>
+        <br/>
+        <span id="spanLocalidade">@if (Model.Municipio != null) { @Model.Municipio.Id }</span>
+        <input id="txtLocalidade" type="text" value="Localidade" style="display:none" />
+        <br/>
+        <span>@Model.Sexo</span><br/>
+        <span>@if (Model.DataNascimento.HasValue) { Model.DataNascimento.Value.ToString("dd/MM/yyyy"); }</span>
+    </div>
+    <div id="editPubData" style="display:none" >
+        <form id="editarDadosPublicos">
+            <span>Nome:</span>
+            <input id="txtNomePubData" type="text" value="Nome" />
+            <br>
+            <span>Email:</span>
+            <input id="txtEmailPubData" type="text" value="Email" />
+            <br>
+            <input id="btnCancelPubData" type="button" value="Cancelar" onclick="cancelarPubData();" />
+            <input id="btnSubmitPubData" type="button" value="Salvar" onclick="salvarPubData();" />
+            <br>
+        </form>
+    </div>
+</div>
+
+<!--Painel de descrição-->
+<div class="panel panel-default">
+    <div class="panel-body" id="panelDescricao">
+        <a id="aDescricao" class="btn btn-default btn-sm margin-left-5 pull-right" 
+            data-action="disable" data-type="show-form" data-target="editPubData" 
+            data-hide-target="pubData" data-options="show" data-params="noreset"
+            onclick="editarDescricao();">
+            <span class="glyphicon glyphicon-pencil">
+            </span>
+        </a>
+        <h3>Resumo</h3>
+        <hr />
+        <span id="spanDescricao">@Model.Resumo</span>
+        <br />
+        Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.
+    </div>
+    <div id="editDescricao" style="display:none" >
+        <form>
+            <span>Descrição:</span>
+            <input id="txtDescricao" type="text" value="Nome" />
+            <br>
+            <input id="btnCancelDescricao" type="button" value="Cancelar" onclick="cancelarDescricao();" />
+            <input id="btnSubmitDescricao" type="button" value="Salvar" onclick="salvarDescricao();" />
+            <br>
+        </form>
+    </div>
+</div>
+
+<!--Painel de serviço-->
+<div class="panel panel-default">
+    <div class="panel-body">
+        <h3>Minhas Fotos</h3>
+        <hr />
+
+        @*<input type="file" id="uploadEditorImage" />*@
+
+        <div class="row">
+            @if (Model.Imagens != null)
+            {
+                foreach (var imagem in Model.Imagens)
+                {
+                    <div class="col-sm-3 col-md-2">
+                        <div class="thumbnail">
+                            <a href="/Imagens/Imagem/@imagem.Id"><img src="@imagem.PathImagem" alt="..." style="width:300px; height:150px"></a>
+                            <div class="caption">
+                                <span id="@String.Concat("spanLegenda", imagem.Id.ToString())">@imagem.Legenda</span>
+                                <button id="@String.Concat("btnEditarLegenda", imagem.Id.ToString())" type="button" class="btn btn-default" onclick="editarLegenda(@imagem.Id);">Editar</button>
+                                <form id="@String.Concat("formLegenda", imagem.Id.ToString())" style="display:none;">
+                                    <input id="@String.Concat("txtLegenda", imagem.Id.ToString())" type="text" value="Nome" />
+                                    <br>
+                                    <input id="@String.Concat("btnCancelLegenda", imagem.Id.ToString())" type="button" value="Cancelar" onclick="cancelarLegenda(@imagem.Id);" />
+                                    <input id="@String.Concat("btnSubmitLegenda", imagem.Id.ToString())" type="button" value="Salvar" onclick="salvarLegenda(@imagem.Id);" />
+                                    <br>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+        <form>
+            <input type="file" name="datafile" />
+            <input type="button" value="Enviar" onclick="fileUpload(this.form,'UploadImagem','upload'); return false;" >
+            <div id="upload"></div>
+        </form>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <h3>Avaliações</h3>
+        <hr />
+        @if (Model.Avaliacoes != null)
+        {
+            foreach (var avaliacao in Model.Avaliacoes)
+            {
+
+                <div class="media">
+                    <div class="media-left">
+                        <a href="#">
+                            <img class="media-object" data-src="holder.js/64x64" alt="64x64" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+PCEtLQpTb3VyY2UgVVJMOiBob2xkZXIuanMvNjR4NjQKQ3JlYXRlZCB3aXRoIEhvbGRlci5qcyAyLjYuMC4KTGVhcm4gbW9yZSBhdCBodHRwOi8vaG9sZGVyanMuY29tCihjKSAyMDEyLTIwMTUgSXZhbiBNYWxvcGluc2t5IC0gaHR0cDovL2ltc2t5LmNvCi0tPjxkZWZzPjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+PCFbQ0RBVEFbI2hvbGRlcl8xNTE1ZTMyNWI2NSB0ZXh0IHsgZmlsbDojQUFBQUFBO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1mYW1pbHk6QXJpYWwsIEhlbHZldGljYSwgT3BlbiBTYW5zLCBzYW5zLXNlcmlmLCBtb25vc3BhY2U7Zm9udC1zaXplOjEwcHQgfSBdXT48L3N0eWxlPjwvZGVmcz48ZyBpZD0iaG9sZGVyXzE1MTVlMzI1YjY1Ij48cmVjdCB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIGZpbGw9IiNFRUVFRUUiLz48Zz48dGV4dCB4PSIxNC41IiB5PSIzNi41Ij42NHg2NDwvdGV4dD48L2c+PC9nPjwvc3ZnPg==" data-holder-rendered="true" style="width: 64px; height: 64px;">
+                        </a>
+                    </div>
+                    <div class="media-body">
+                        <h4 class="media-heading">@avaliacao.Resumo  @avaliacao.Nota</h4>
+                        @avaliacao.Texto
+                        @if (avaliacao.Comentarios != null)
+                        {
+                            if (avaliacao.Comentarios.Count > 0)
+                            {
+                                foreach (var comentario in avaliacao.Comentarios)
+                                {
+
+                                <div class="media">
+                                    <div class="media-left">
+                                        <a href="#">
+                                            <img class="media-object" data-src="holder.js/64x64" alt="64x64" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+PCEtLQpTb3VyY2UgVVJMOiBob2xkZXIuanMvNjR4NjQKQ3JlYXRlZCB3aXRoIEhvbGRlci5qcyAyLjYuMC4KTGVhcm4gbW9yZSBhdCBodHRwOi8vaG9sZGVyanMuY29tCihjKSAyMDEyLTIwMTUgSXZhbiBNYWxvcGluc2t5IC0gaHR0cDovL2ltc2t5LmNvCi0tPjxkZWZzPjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+PCFbQ0RBVEFbI2hvbGRlcl8xNTE1ZTMyN2QwNSB0ZXh0IHsgZmlsbDojQUFBQUFBO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1mYW1pbHk6QXJpYWwsIEhlbHZldGljYSwgT3BlbiBTYW5zLCBzYW5zLXNlcmlmLCBtb25vc3BhY2U7Zm9udC1zaXplOjEwcHQgfSBdXT48L3N0eWxlPjwvZGVmcz48ZyBpZD0iaG9sZGVyXzE1MTVlMzI3ZDA1Ij48cmVjdCB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIGZpbGw9IiNFRUVFRUUiLz48Zz48dGV4dCB4PSIxNC41IiB5PSIzNi41Ij42NHg2NDwvdGV4dD48L2c+PC9nPjwvc3ZnPg==" data-holder-rendered="true" style="width: 64px; height: 64px;">
+                                        </a>
+                                    </div>
+                                    <div class="media-body">
+                                        <h4 class="media-heading">Cabeçalho</h4>
+                                        @comentario.Texto
+                                    </div>
+                                </div>
+                                }
+                            }
+                        }
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+<hr />
+<script>
+    function editarPubData() {
+        $('#txtNomePubData').val($('#spanNome').text());
+        $('#txtEmailPubData').val($('#spanEmail').text());
+        $('#editPubData').show();
+        $('#panelDadosGerais').hide();
+    }
+
+    function editarLegenda(n) {
+        var nomeForm = "#formLegenda" + n;
+        var textBoxLegenda = "#txtLegenda" + n;
+        var spanLegenda = "#spanLegenda" + n;
+        $(textBoxLegenda).val($(spanLegenda).text());
+        $(spanLegenda).hide();
+        $(nomeForm).show();
+    }
+        
+    function cancelarPubData() {
+        $('#editPubData').hide();
+        $('#panelDadosGerais').show();
+    }
+
+    function cancelarLegenda(n) {
+        var nomeForm = "#formLegenda" + n;
+        var spanLegenda = "#spanLegenda" + n;
+        $(nomeForm).hide();
+        $(spanLegenda).show();
+    }
+
+    function salvarPubData() {
+        dados = {
+            Nome: $('#txtNomePubData').val(),
+            Email: $('#txtEmailPubData').val()
+        }
+        $.ajax({
+            url: '/Perfil/EditarDadosGerais',
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(dados),
+            success: function () {
+                $('#spanNome').text($('#txtNomePubData').val());
+                $('#spanEmail').text($('#txtEmailPubData').val());
+                $('#editPubData').hide();
+                $('#panelDadosGerais').show();
+            }
+        });
+    }
+
+    function salvarLegenda(n) {
+        var textBoxLegenda = "#txtLegenda" + n;
+        var nomeForm = "#formLegenda" + n;
+        legenda = {
+            Id: n, 
+            Texto: $(textBoxLegenda).val()
+        }
+        $.ajax({
+            url: '/Perfil/EditarLegendaFoto',
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(legenda),
+            success: function () {
+                var spanLegenda = "#spanLegenda" + n;
+                $(spanLegenda).text($(textBoxLegenda).val());
+                $(nomeForm).hide();
+                $(spanLegenda).show();
+            }
+        });
+    }
+
+    function editarDescricao() {
+        $('#txtDescricao').val($('#spanDescricao').text());
+        $('#panelDescricao').hide();
+        $('#editDescricao').show();
+    }
+
+    function cancelarDescricao() {
+        $('#editDescricao').hide();
+        $('#panelDescricao').show();
+    }
+
+    function salvarDescricao() {
+        info = {
+            Descricao: $('#txtDescricao').val()
+        }
+        $.ajax({
+            url: '/Perfil/EditarResumoProfissional',
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(info),
+            success: function () {
+                $('#spanDescricao').text($('#txtDescricao').val());
+                $('#editDescricao').hide();
+                $('#panelDescricao').show();
+            }
+        });
+    }
+
+    function fileUpload(form, action_url, div_id) {
+        // Create the iframe...
+        var iframe = document.createElement("iframe");
+        iframe.setAttribute("id","upload_iframe");
+        iframe.setAttribute("name","upload_iframe");
+        iframe.setAttribute("width","0");
+        iframe.setAttribute("height","0");
+        iframe.setAttribute("border","0");
+        iframe.setAttribute("style","width: 0; height: 0; border: none;");
+
+        // Add to document...
+        form.parentNode.appendChild(iframe);
+        window.frames['upload_iframe'].name="upload_iframe";
+
+        iframeId = document.getElementById("upload_iframe");
+
+        // Add event...
+        var eventHandler = function()  {
+
+            if (iframeId.detachEvent)
+                iframeId.detachEvent("onload", eventHandler);
+            else
+                iframeId.removeEventListener("load", eventHandler, false);
+
+            // Message from server...
+            if (iframeId.contentDocument) {
+                content = iframeId.contentDocument.body.innerHTML;
+            } else if (iframeId.contentWindow) {
+                content = iframeId.contentWindow.document.body.innerHTML;
+            } else if (iframeId.document) {
+                content = iframeId.document.body.innerHTML;
+            }
+
+            document.getElementById(div_id).innerHTML = content;
+            
+            // Del the iframe...
+            setTimeout('iframeId.parentNode.removeChild(iframeId)', 250);
+        }
+        
+        if (iframeId.addEventListener)
+            iframeId.addEventListener("load", eventHandler, true);
+        if (iframeId.attachEvent)
+            iframeId.attachEvent("onload", eventHandler);
+
+        // Set properties of form...
+        form.setAttribute("target","upload_iframe");
+        form.setAttribute("action", action_url);
+        form.setAttribute("method","post");
+        form.setAttribute("enctype","multipart/form-data");
+        form.setAttribute("encoding","multipart/form-data");
+
+        // Submit the form...
+        form.submit();
+
+        document.getElementById(div_id).innerHTML = "Uploading...";
+    }
+</script>

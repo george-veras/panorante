@@ -1,0 +1,36 @@
+﻿@{
+    ViewBag.Title = "Solicitar Servico";
+    Layout = null;
+}
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <span>Título</span>
+        <input id="txtTitulo" type="text" value="Titulo" />
+        <br />
+        <span>Descricao:</span>
+        <input id="txtDescricao" type="text" value="Descrição do serviço" />
+        <br />
+        <input id="txtEtiquetas" type="text" value="Etiquetas" />
+        <br />
+        <input id="btnPublicar" type="button" value="Publicar" onclick="solicitarServico();" />
+    </div>
+</div>
+
+<script>
+    function solicitarServico() {
+        servico = {
+            Titulo: $('#txtTitulo').val(),
+            Descricao: $('#txtDescricao').val()
+        }
+        $.ajax({
+            url: '/Servicos/PublicarServico',
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(servico),
+            success: function (result) {
+                alert('Solicitação de serviço publicada com sucesso! :)');
+            }
+        });
+    }
+</script>

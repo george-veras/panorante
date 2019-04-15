@@ -1,0 +1,28 @@
+﻿@{
+    ViewBag.Title = "Mensagens";
+    Layout = null;
+}
+
+@using EuFaco.DataAccess.Models
+@model List<Mensagem>
+
+<div class="list-group" id="lista">
+    @if (Model.Count > 0)
+    {
+        foreach (Mensagem mensagem in Model)
+        {
+            <a href="#" class="list-group-item" id="@String.Concat("msg", mensagem.Id)">
+                <h4 class="list-group-item-heading">Nome do usuario: @mensagem.Remetente.Nome</h4>
+                <br>
+                Enviada em: @mensagem.DataHoraEnvio.ToString("dd/MM/yyyy HH:mm")
+                <p class="list-group-item-text">
+                    <span>@mensagem.Conteudo</span>
+                    <br>
+                </p>
+            </a>
+        }
+    }
+</div>
+
+<script>
+</script>

@@ -1,0 +1,374 @@
+﻿@{
+    ViewBag.Title = "Projeto de " + Model.Autor.Nome;
+    Layout = null;
+}
+
+@using EuFaco.DataAccess.Models
+@model PublicacaoProjeto
+
+<!-- MAIN CONTENT -->
+<div id="content-block">
+    <div class="container custom-container be-detail-container">
+        <div class="row">
+            <div class="col-md-9 col-md-push-3">
+                <div class="be-large-post">
+                    <div class="info-block">
+                        <div class="be-large-post-align">
+                            <span><i class="fa fa-thumbs-o-up"></i> 253</span>
+                            <span><i class="fa fa-eye"></i> 70</span>
+                            <span><i class="fa fa-comment-o"></i> @Model.Comentarios.Count</span>
+                        </div>
+                    </div>
+                    <div class="blog-content be-large-post-align">
+                        <h5 class="be-post-title">
+                            @Model.Titulo
+                        </h5>
+                        <div class="clear"></div>
+
+                        <img src="@Model.PathImagemCapa" alt="">
+
+
+                        <div class="post-text">
+                            @foreach (ItemPublicacao item in Model.Conteudo)
+                            {
+                                if (item.Nome == "Paragrafo")
+                                {
+                                    <p>@item.Valor</p>
+                                }
+                                else if (item.Nome == "Imagem")
+                                {
+                                    <img src="@item.Valor" alt="">
+                                }
+                            }
+                        </div>
+                    </div>
+
+                    @if (Model.Etiquetas != null)
+                    {
+                        if (Model.Etiquetas.Count > 0)
+                        {
+                            <br />
+                            <div class="be-large-post-align">
+                                <h3 class="letf-menu-article">
+                                    Etiquetas
+                                </h3>
+                                <div class="tags_block clearfix">
+                                    <ul>
+                                        @foreach (EtiquetaPublicacao etiqueta in Model.Etiquetas)
+                                        {
+                                            <li><a href="#">@etiqueta.Nome</a></li>
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                        }
+                    }
+
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="be-post">
+                            <a href="blog-detail-2.html" class="be-img-block">
+                                <img src="~/Images/NRGNetwork/p3.jpg" alt="omg">
+                            </a>
+                            <a href="blog-detail-2.html" class="be-post-title">Colors of Ramadan</a>
+                            <span>
+                                <a href="blog-detail-2.html" class="be-post-tag">Interaction Design</a>,
+                                <a href="blog-detail-2.html" class="be-post-tag">UI/UX</a>,
+                                <a href="blog-detail-2.html" class="be-post-tag">Web Design</a>
+                            </span>
+                            <div class="author-post">
+                                <img src="~/Images/NRGNetwork/a5.png" alt="" class="ava-author">
+                                <span>by <a href="blog-detail-2.html">Hoang Nguyen</a></span>
+                            </div>
+                            <div class="info-block">
+                                <span><i class="fa fa-thumbs-o-up"></i> 360</span>
+                                <span><i class="fa fa-eye"></i> 789</span>
+                                <span><i class="fa fa-comment-o"></i> 20</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="be-post">
+                            <a href="blog-detail-2.html" class="be-img-block">
+                                <img src="~/Images/NRGNetwork/p4.jpg" alt="omg">
+                            </a>
+                            <a href="blog-detail-2.html" class="be-post-title">Leaving Home - L'Officiel Ukraine</a>
+                            <span>
+                                <a href="blog-detail-2.html" class="be-post-tag">Interaction Design</a>,
+                                <a href="blog-detail-2.html" class="be-post-tag">UI/UX</a>,
+                                <a href="blog-detail-2.html" class="be-post-tag">Web Design</a>
+                            </span>
+                            <div class="author-post">
+                                <img src="~/Images/NRGNetwork/a5.png" alt="" class="ava-author">
+                                <span>by <a href="blog-detail-2.html">Hoang Nguyen</a></span>
+                            </div>
+                            <div class="info-block">
+                                <span><i class="fa fa-thumbs-o-up"></i> 360</span>
+                                <span><i class="fa fa-eye"></i> 789</span>
+                                <span><i class="fa fa-comment-o"></i> 20</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="be-post">
+                            <a href="blog-detail-2.html" class="be-img-block">
+                                <img src="~/Images/NRGNetwork/p5.jpg" alt="omg">
+                            </a>
+                            <a href="blog-detail-2.html" class="be-post-title">Drive Your World</a>
+                            <span>
+                                <a href="blog-detail-2.html" class="be-post-tag">Interaction Design</a>,
+                                <a href="blog-detail-2.html" class="be-post-tag">UI/UX</a>,
+                                <a href="blog-detail-2.html" class="be-post-tag">Web Design</a>
+                            </span>
+                            <div class="author-post">
+                                <img src="~/Images/NRGNetwork/a9.png" alt="" class="ava-author">
+                                <span>by <a href="blog-detail-2.html">Hoang Nguyen</a></span>
+                            </div>
+                            <div class="info-block">
+                                <span><i class="fa fa-thumbs-o-up"></i> 360</span>
+                                <span><i class="fa fa-eye"></i> 789</span>
+                                <span><i class="fa fa-comment-o"></i> 20</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="be-comment-block">
+
+                    @if (Model.Comentarios != null)
+                    {
+                        <h1 class="comments-title">Comentários (@Model.Comentarios.Count)</h1>
+                        <p class="about-comment-block">
+                            Você deve se <a href="blog-detail-2.html" class="be-signup-link">CADASTRAR</a>
+                            para se juntar à conversa.
+                        </p>
+                        foreach (ComentarioPublicacao comentario in Model.Comentarios)
+                        {
+                            <div class="be-comment">
+                                <div class="be-img-comment">
+                                    <a href="blog-detail-2.html">
+                                        <img src="~/Images/NRGNetwork/c1.png" alt="" class="be-ava-comment">
+                                    </a>
+                                </div>
+                                <div class="be-comment-content">
+                                    <span class="be-comment-name">
+                                        <a href="blog-detail-2.html">@comentario.Autor.Nome</a>
+                                    </span>
+                                    <span class="be-comment-time">
+                                        <i class="fa fa-clock-o"></i>
+                                        @comentario.DataHoraComentada
+                                    </span>
+                                    <p class="be-comment-text">
+                                        @comentario.Texto
+                                    </p>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <h1 class="comments-title">Comentários (0)</h1>
+                        <p class="about-comment-block">
+                            Você deve se <a href="blog-detail-2.html" class="be-signup-link">CADASTRAR</a>
+                            para se juntar à conversa.
+                        </p>
+                    }
+
+                    <div class="be-comment">
+                        <div class="be-img-comment">
+                            <a href="blog-detail-2.html">
+                                <img src="~/Images/NRGNetwork/c1.png" alt="" class="be-ava-comment">
+                            </a>
+                        </div>
+                        <div class="be-comment-content">
+
+                            <span class="be-comment-name">
+                                <a href="blog-detail-2.html">Ravi Sah</a>
+                            </span>
+                            <span class="be-comment-time">
+                                <i class="fa fa-clock-o"></i>
+                                May 27, 2015 at 3:14am
+                            </span>
+
+                            <p class="be-comment-text">
+                                Pellentesque gravida tristique ultrices.
+                                Sed blandit varius mauris, vel volutpat urna hendrerit id.
+                                Curabitur rutrum dolor gravida turpis tristique efficitur.
+                            </p>
+                        </div>
+
+                    </div>
+                    <div class="be-comment">
+                        <div class="be-img-comment">
+                            <a href="blog-detail-2.html">
+                                <img src="~/Images/NRGNetwork/c2.png" alt="" class="be-ava-comment">
+                            </a>
+                        </div>
+                        <div class="be-comment-content">
+
+                            <span class="be-comment-name">
+                                <a href="blog-detail-2.html">Phoenix, the Creative Studio</a>
+                            </span>
+                            <span class="be-comment-time">
+                                <i class="fa fa-clock-o"></i>
+                                May 27, 2015 at 3:14am
+                            </span>
+
+                            <p class="be-comment-text">
+                                Nunc ornare sed dolor sed mattis. In scelerisque dui a arcu mattis, at maximus eros commodo. Cras magna nunc, cursus lobortis luctus at, sollicitudin vel neque. Duis eleifend lorem non ant. Proin ut ornare lectus, vel eleifend est. Fusce hendrerit dui in turpis tristique blandit.
+                            </p>
+                        </div>
+
+                    </div>
+                    <div class="be-comment">
+                        <div class="be-img-comment">
+                            <a href="blog-detail-2.html">
+                                <img src="~/Images/NRGNetwork/c3.png" alt="" class="be-ava-comment">
+                            </a>
+                        </div>
+                        <div class="be-comment-content">
+                            <span class="be-comment-name">
+                                <a href="blog-detail-2.html">Dorian Camp</a>
+                            </span>
+                            <span class="be-comment-time">
+                                <i class="fa fa-clock-o"></i>
+                                May 27, 2015 at 3:14am
+                            </span>
+                            <p class="be-comment-text">
+                                Cras magna nunc, cursus lobortis luctus at, sollicitudin vel neque. Duis eleifend lorem non ant
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-md-pull-9 left-feild">
+                <div class="be-user-block">
+                    <div class="be-user-detail">
+                        <a class="be-ava-user" href="blog-detail-2.html">
+                            <img src="~/Images/NRGNetwork/ava.png" alt="">
+                        </a>
+                        <p class="be-use-name">Daniel Ng</p>
+                        <span class="be-user-info">
+                            Singapore, Singapore
+                        </span>
+                    </div>
+                    <div class="be-user-activity-block">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <a href="blog-detail-2.html" class="be-user-activity-button be-follow-type"><i class="fa fa-plus"></i>FOLLOW</a>
+                            </div>
+                            <div class="col-lg-6">
+                                <a href="blog-detail-2.html" class="col-lg-6 be-user-activity-button be-message-type"><i class="fa fa-envelope-o"></i>MESSAGE</a>
+                            </div>
+                        </div>
+                    </div>
+                    <h5 class="be-title">
+                        About Project
+                    </h5>
+                    <p class="be-text-userblock">
+                        Fusce dolor libero, efficitur et lobortis at, faucibus nec nunc. Proin fermentum turpis eget nisi facilisis lobortis. Praesent malesuada facilisis maximus. Donec sed lobortis tortor. Ut nec lacinia sapien, sit amet dapibus magna.
+                    </p>
+                </div>
+                <a href="blog-detail-2.html" class="be-button-vidget blue-style"><i class="fa fa-thumbs-o-up"></i>LIKE PROJECT</a>
+                <a href="blog-detail-2.html" class="be-button-vidget grey-style"><i class="fa fa-file-o"></i>ADD TO COLLECTION</a>
+
+                <h3 class="letf-menu-article text-center">Recent Works</h3>
+                <div class="swiper-container" data-loop="1" data-speed="500" data-center="0" data-slides-per-view="1">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide">
+                            <div class="be-post">
+                                <a href="blog-detail-2.html" class="be-img-block">
+                                    <img src="~/Images/NRGNetwork/p9.jpg" height="202" width="269" alt="omg">
+                                </a>
+                                <a href="blog-detail-2.html" class="be-post-title">NAHA Finalist Hairstylist of the Year Allen Ruiz</a>
+                                <span>
+                                    <a href="blog-detail-2.html" class="be-post-tag">Art direction</a>,
+                                    <a href="blog-detail-2.html" class="be-post-tag">Web Design</a>,
+                                    <a href="blog-detail-2.html" class="be-post-tag">Interactiob design</a>
+                                </span>
+                                <div class="author-post">
+                                    <img src="~/Images/NRGNetwork/ava.png" alt="" class="ava-author">
+                                    <span>by <a href="blog-detail-2.html">Daniel Ng</a></span>
+                                </div>
+                                <div class="info-block">
+                                    <span><i class="fa fa-thumbs-o-up"></i> 253</span>
+                                    <span><i class="fa fa-eye"></i> 753</span>
+                                    <span><i class="fa fa-comment-o"></i> 50</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="be-post">
+                                <a href="blog-detail-2.html" class="be-img-block">
+                                    <img src="~/Images/NRGNetwork/p9.jpg" height="202" width="269" alt="omg">
+                                </a>
+                                <a href="blog-detail-2.html" class="be-post-title">NAHA Finalist Hairstylist of the Year Allen Ruiz</a>
+                                <span>
+                                    <a href="blog-detail-2.html" class="be-post-tag">Art direction</a>,
+                                    <a href="blog-detail-2.html" class="be-post-tag">Web Design</a>,
+                                    <a href="blog-detail-2.html" class="be-post-tag">Interactiob design</a>
+                                </span>
+                                <div class="author-post">
+                                    <img src="~/Images/NRGNetwork/ava.png" alt="" class="ava-author">
+                                    <span>by <a href="blog-detail-2.html">Daniel Ng</a></span>
+                                </div>
+                                <div class="info-block">
+                                    <span><i class="fa fa-thumbs-o-up"></i> 253</span>
+                                    <span><i class="fa fa-eye"></i> 753</span>
+                                    <span><i class="fa fa-comment-o"></i> 50</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="be-post">
+                                <a href="blog-detail-2.html" class="be-img-block">
+                                    <img src="~/Images/NRGNetwork/p9.jpg" height="202" width="269" alt="omg">
+                                </a>
+                                <a href="blog-detail-2.html" class="be-post-title">NAHA Finalist Hairstylist of the Year Allen Ruiz</a>
+                                <span>
+                                    <a href="blog-detail-2.html" class="be-post-tag">Art direction</a>,
+                                    <a href="blog-detail-2.html" class="be-post-tag">Web Design</a>,
+                                    <a href="blog-detail-2.html" class="be-post-tag">Interactiob design</a>
+                                </span>
+                                <div class="author-post">
+                                    <img src="~/Images/NRGNetwork/ava.png" alt="" class="ava-author">
+                                    <span>by <a href="blog-detail-2.html">Daniel Ng</a></span>
+                                </div>
+                                <div class="info-block">
+                                    <span><i class="fa fa-thumbs-o-up"></i> 253</span>
+                                    <span><i class="fa fa-eye"></i> 753</span>
+                                    <span><i class="fa fa-comment-o"></i> 50</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="be-post">
+                                <a href="blog-detail-2.html" class="be-img-block">
+                                    <img src="~/Images/NRGNetwork/p9.jpg" height="202" width="269" alt="omg">
+                                </a>
+                                <a href="blog-detail-2.html" class="be-post-title">NAHA Finalist Hairstylist of the Year Allen Ruiz</a>
+                                <span>
+                                    <a href="blog-detail-2.html" class="be-post-tag">Art direction</a>,
+                                    <a href="blog-detail-2.html" class="be-post-tag">Web Design</a>,
+                                    <a href="blog-detail-2.html" class="be-post-tag">Interactiob design</a>
+                                </span>
+                                <div class="author-post">
+                                    <img src="~/Images/NRGNetwork/ava.png" alt="" class="ava-author">
+                                    <span>by <a href="blog-detail-2.html">Daniel Ng</a></span>
+                                </div>
+                                <div class="info-block">
+                                    <span><i class="fa fa-thumbs-o-up"></i> 253</span>
+                                    <span><i class="fa fa-eye"></i> 753</span>
+                                    <span><i class="fa fa-comment-o"></i> 50</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pagination">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

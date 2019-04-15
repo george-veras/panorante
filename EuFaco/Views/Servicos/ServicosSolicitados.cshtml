@@ -1,0 +1,33 @@
+﻿@{
+    ViewBag.Title = "Serviços Solicitados";
+    Layout = null;
+}
+
+@using EuFaco.DataAccess.Models
+@model List<Servico>
+
+<div class="list-group" id="lista">
+
+    @if (Model.Count > 0)
+    {
+        foreach (Servico servico in Model)
+        {
+            <a class="list-group-item" id="@String.Concat("servico", servico.Id)">
+                <h4 class="list-group-item-heading">Solicitante: @servico.Solicitante.Nome</h4>
+                <input type="button" value="Abrir" onclick="@String.Format("seguir({0})", servico.Id)" />
+                <p class="list-group-item-text">
+                    <h4>@servico.Titulo        Solicitado em: @servico.DataHoraSolicitacao.ToString("dd/MM/yyyy HH:mm:ss")</h4>
+                    <span>@servico.Descricao</span>
+                    <br>
+                </p>
+            </a>
+        }
+    }
+</div>
+
+<script>
+    function seguir(n) {
+        var link = '/Servicos/ServicoSolicitado/' + n;
+        location.href = link;
+    }
+</script>

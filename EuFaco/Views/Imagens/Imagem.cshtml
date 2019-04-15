@@ -1,0 +1,93 @@
+﻿@{
+    ViewBag.Title = "Imagem";
+    Layout = null;
+}
+
+@using EuFaco.DataAccess.Models;
+@model Imagem
+
+<div id="fb-root"></div>
+<script>
+    window.fbAsyncInit = function () {
+        FB.init({
+            appId: '1753687224853096',
+            xfbml: true,
+            version: 'v2.5'
+        });
+    };
+
+    (function (d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) { return; }
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/pt_BR/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+
+    function abrirShareDialog() {
+        FB.ui({
+            method: 'share',
+            href: 'http://saibanaweb-com-br.web20.redehost.net',
+        }, function (response) { });
+    }
+</script>
+
+<meta property="og:url" content="saibanaweb-com-br.web20.redehost.net" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Teste de compartilhamento" />
+<meta property="og:description" content="O Eu Faço tá vindo aí!" />
+<meta property="og:image" content="http://saibanaweb-com-br.web20.redehost.net/FotosProfissional/Vicent-van-Legogh.png" />
+<meta property="og:site_name" content="Eu Faço" />
+<meta property="og:app_id" content="1753687224853096" />
+
+<!--Painel de serviço-->
+<div class="panel panel-default">
+    <div class="panel-body">
+        <h3>Foto</h3>
+        <hr />
+                
+        <div class="row">
+            <img src="@Model.PathImagem" alt="..." style="width:300px; height:150px"/>
+            <br>
+            <span>@Model.Legenda</span>
+        </div>
+        @*<div class="fb-like" data-share="true" data-width="450" data-show-faces="true"></div>*@
+        <div class="fb-share-button" data-href="http://saibanaweb-com-br.web20.redehost.net" data-layout="button"></div>
+        <br>
+        <div class="fb-like" data-href="http://saibanaweb-com-br.web20.redehost.net" data-width="439" data-layout="standard" data-action="like" data-show-faces="true" data-share="true"></div>
+        <br>
+        <a href="whatsapp://send?text=http://saibanaweb-com-br.web20.redehost.net" data-action="share/whatsapp/share">Compartilhe via Whatsapp</a>
+        <br>
+        <div class="fb-send" data-href="http://saibanaweb-com-br.web20.redehost.net"></div>
+        <br>
+        <input type="button" onclick="abrirShareDialog()" value="Compartilhar (abrir Share Dialog)">
+    </div>
+</div>
+<script>
+    //$(document).ready(function () {
+    //    $.getScript('//connect.facebook.net/en_US/sdk.js', function () {
+    //        FB.init({
+    //            appId: '{your-app-id}',
+    //            version: 'v2.5'
+    //        });
+    //        $('#loginbutton,#feedbutton').removeAttr('disabled');
+    //        FB.ui({
+    //            method: 'share',
+    //            href: 'https://developers.facebook.com/docs/'
+    //        }, function (response) { });
+    //        //FB.ui({
+    //        //    method: 'share_open_graph',
+    //        //    action_type:'og.likes',
+    //        //    action_properties: JSON.stringify({
+    //        //        object: 'https://developers.facebook.com/docs/',
+    //        //    })
+    //        //}, function (response) {
+    //        //    //Debug response (optional)
+    //        //    console.log(response);
+    //        //});
+    //        //FB.getLoginStatus(updateStatusCallback);
+    //    });
+    //});
+
+    
+</script>

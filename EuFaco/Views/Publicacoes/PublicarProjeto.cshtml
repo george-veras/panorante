@@ -1,0 +1,213 @@
+﻿@{
+    ViewBag.Title = "Publicando um projeto";
+    Layout = null;
+}
+
+@section scripts{
+    <script src="~/Scripts/jquery-ui-1.11.4.min.js"></script>
+    <script src="~/Scripts/tag-it.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $("#etiquetas").tagit({
+                fieldName: "etiquetas",
+                tagLimit: 7,
+                availableTags: ["Quarto", "Sala", "Cozinha", "Banheiro", "Oxi"]
+            });
+        });
+
+        function adicionarParagrafo() {
+            var numeroParagrafo = parseInt($("#numeroParagrafo").val()) + 1;
+            $("#numeroParagrafo").val(numeroParagrafo);
+            $("#divBtnAdicionarParagrafo").before('<div id="divParagrafo' + numeroParagrafo + '" class="input-col col-xs-12"><div class="form-group focus-2"><div class="form-label">Parágrafo</div><textarea class="form-input" id="txtParagrafo' + numeroParagrafo + '" name="txtParagrafo' + numeroParagrafo + '" required="" placeholder="Faça uma descrição do seu projeto."></textarea></div></div>');
+        }
+
+        function inserirImagem() {
+            var numeroImagem = $("#numeroImagem").val();
+            $("#divBtnAdicionarParagrafo").before('<div id="divImagem' + numeroImagem + '" class="input-col col-xs-12"><input type="hidden" id="hiddenImagePosition' + numeroImagem + '" name="hiddenImagePosition' + numeroImagem + '" value="' + numeroImagem + '" /><img id="img' + numeroImagem + '" name="img' + numeroImagem + '" src="" alt=""><input type="file" id="fileImagem' + numeroImagem + '" name="fileImagem' + numeroImagem + '" onchange="abrirImagem(this, ' + numeroImagem + ');" /></div>');
+            $("#numeroImagem").val(parseInt(numeroImagem) + 1);
+        }
+
+        function publicarProjeto() {
+            @* Cria o elemento iframe *@
+            var iframe = document.createElement("iframe");
+            iframe.setAttribute("id", "upload_iframe");
+            iframe.setAttribute("name", "upload_iframe");
+            iframe.setAttribute("width", "0");
+            iframe.setAttribute("height", "0");
+            iframe.setAttribute("border", "0");
+            iframe.setAttribute("style", "width: 0; height: 0; border: none;");
+
+            @* Adiciona ao documento *@
+            form = document.getElementById("frmNovoProjeto");
+            form.parentNode.appendChild(iframe);
+            window.frames['upload_iframe'].name = "upload_iframe";
+            iframeId = document.getElementById("upload_iframe");
+
+            @* Adiciona evento *@
+            var eventHandler = function () {
+
+                if (iframeId.detachEvent)
+                    iframeId.detachEvent("onload", eventHandler);
+                else
+                    iframeId.removeEventListener("load", eventHandler, false);
+
+                @* Mensagem do servidor *@
+                if (iframeId.contentDocument) {
+                    content = iframeId.contentDocument.body.innerHTML;
+                } else if (iframeId.contentWindow) {
+                    content = iframeId.contentWindow.document.body.innerHTML;
+                } else if (iframeId.document) {
+                    content = iframeId.document.body.innerHTML;
+                }
+
+                @* Deleta o elemento iframe *@
+                setTimeout('iframeId.parentNode.removeChild(iframeId)', 250);
+            }
+
+            if (iframeId.addEventListener)
+                iframeId.addEventListener("load", eventHandler, true);
+            if (iframeId.attachEvent)
+                iframeId.attachEvent("onload", eventHandler);
+
+            @* Seta as propriedades do form *@
+            form.setAttribute("target", "upload_iframe");
+            form.setAttribute("action", 'SalvarPublicacaoProjeto');
+            form.setAttribute("method", "post");
+            form.setAttribute("enctype", "multipart/form-data");
+            form.setAttribute("encoding", "multipart/form-data");
+
+            @* Submete o form *@
+            form.submit();
+        }
+
+        function abrirImagem(input, numeroImagem) {
+            if (input.files && input.files[0]) {
+                var elementoImage = "#img" + numeroImagem;
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $(elementoImage).attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function abrirImagemCapa(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $("#imgCapa").attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+}
+
+<div class="container be-detail-container">
+    <div class="row">
+        <div class="col-xs-12 col-md-3 left-feild">
+            <div class="be-vidget back-block">
+                <a class="btn full color-1 size-1 hover-1"><i class="fa fa-chevron-left"></i>voltar ao perfil</a>
+            </div>
+            <div class="be-vidget hidden-xs hidden-sm" id="scrollspy">
+                <h3 class="letf-menu-article">
+                    Choose Category
+                </h3>
+                <div class="creative_filds_block">
+                    <ul class="ul nav">
+                        <li><a href="blog-detail-2.htmlbasic-information">Basic Information</a></li>
+                        <li><a href="blog-detail-2.htmledit-password">Edit Password</a></li>
+                        <li><a href="blog-detail-2.htmlon-the-web">On The Web</a></li>
+                        <li><a href="blog-detail-2.htmlabout-me">About Me</a></li>
+                        <li><a href="blog-detail-2.htmlweb-references">Web References</a></li>
+                    </ul>
+                </div>
+                <a class="btn full color-1 size-1 hover-1" onclick="publicarProjeto();">publicar</a>
+            </div>
+
+        </div>
+        <div class="col-xs-12 col-md-9 _editor-content_">
+            <div class="affix-block" id="basic-information">
+                <div class="be-large-post">
+                    <div class="info-block style-2">
+                        <div class="be-large-post-align"><h3 class="info-block-label">Publicação de Projeto</h3></div>
+                    </div>
+                    <div class="be-large-post-align">
+                        <div id="divRowNovoProjeto" class="row">
+                            <form id="frmNovoProjeto">
+                                <input type="hidden" id="numeroParagrafo" value="1" />
+                                <input type="hidden" id="numeroImagem" value="0" />
+                                <div class="input-col col-xs-12 col-sm-6">
+                                    <div class="form-label">Estado</div>
+                                    <div class="be-drop-down icon-none">
+                                        <span class="be-dropdown-content">Rio de Janeiro</span>
+                                        <ul class="drop-down-list">
+                                            <li><a>Rio de Janeiro</a></li>
+                                            <li><a>São Paulo</a></li>
+                                            <li><a>Paraná</a></li>
+                                            <li><a>Bahia</a></li>
+                                            <li><a>Brasília</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="input-col col-xs-12 col-sm-6">
+                                    <div class="form-group focus-2">
+                                        <div class="form-label">Cidade</div>
+                                        <input class="form-input" type="text" value="Rio de Janeiro">
+                                    </div>
+                                </div>
+                                <div id="divTitulo" class="input-col col-xs-12">
+                                    <div class="form-group focus-2">
+                                        <div class="form-label">Título do projeto</div>
+                                        <input id="txtTitulo" name="txtTitulo" class="form-input" type="text" value="Título">
+                                    </div>
+                                </div>
+                                <div id="divImagemCapa" class="input-col col-xs-12">
+                                    <img id="imgCapa" name="imgCapa" src="" alt="">
+                                    <input type="file" id="fileImagemCapa" name="fileImagemCapa" onchange="abrirImagemCapa(this);" />
+                                </div>
+                                <div id="divParagrafo1" class="input-col col-xs-12">
+                                    <div class="form-group focus-2">
+                                        <div class="form-label">Descrição</div>
+                                        <textarea class="form-input" id="txtParagrafo1" name="txtParagrafo1" required="" placeholder="Faça uma descrição do seu projeto."></textarea>
+                                    </div>
+                                </div>
+
+
+
+                                @*<div id="divImagem1" class="input-col col-xs-12">
+                                    <input type="hidden" name="hiddenImagePosition' + numeroImagem + '" value="' + numeroImagem + '" />
+                                    <img id="img1" name="img1" src="" alt="">
+                                    <input type="file" id="fileImagem1" name="fileImagem1" onchange="abrirImagem(this, 1);" />
+                                </div>*@
+
+
+
+                                <div id="divBtnAdicionarParagrafo" class="col-xs-12">
+                                    <a class="btn color-1 size-2 hover-1 btn-right" onclick="adicionarParagrafo();">Adicionar Parágrafo</a>
+                                </div>
+                                <div id="divBtnInserirImagem" class="col-xs-12">
+                                    <a class="btn color-1 size-2 hover-1 btn-right" onclick="inserirImagem();">Inserir Imagem</a>
+                                </div>
+
+
+
+                                <div id="divEtiquetas" class="input-col col-xs-12">
+                                    <ul id="etiquetas">
+                                        <li>Tag1</li>
+                                        <li>Tag2</li>
+                                    </ul>
+                                </div>
+
+
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <a class="btn full color-1 size-1 hover-1 add_section" ><i class="fa fa-plus"></i>publicar</a>
+        </div>
+    </div>
+</div>

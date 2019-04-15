@@ -1,0 +1,163 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    @"Home"
+
+    <!-- Bootstrap core CSS -->
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    @nulse);
+
+    <title>@ViewBag.Title</title>
+</head>
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Codinome Eu Faço</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <button type="button" class="btn btn-default btn-lg navbar-btn" data-toggle="modal" data-target="#myModal">
+                        Cadastre-se
+                    </button>
+                </ul>
+            </div>
+            <!--/.navbar-collapse -->
+        </div>
+    </nav>
+
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron">
+        <img src="~/Images/banner4.jpg" class="img-responsive" alt="Responsive image" style="width: 100%; height: 100%">
+    </div>
+
+    <div class="container">
+
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Fechar"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Cadastre-se com seu e-mail ou pelo Facebook!</h4>
+                    </div>
+                    <div class="modal-body">
+                        ...
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                        <button type="button" class="btn btn-primary" onclick="logarViaFacebook();">Login Facebook</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @RenderBody()
+        <footer>
+            <p>&copy; 2015 Company, Inc.</p>
+        </footer>
+    </div>
+    <!-- /container -->
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="~/Scripts/jquery-2.2.0.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    @ViewBag.Title
+    <script>
+        function statusChangeCallback(response) {
+            console.log('statusChangeCallback');
+            console.log(response);
+            
+            if (response.status == 'connected') {
+                
+            } else if (response.status == 'not_authorized') {
+                
+            } else {
+                
+            }
+        }
+
+        function checkLoginState() {
+            FB.getLoginStatus(function (response) {
+                statusChangeCallback(response);
+            });
+        }
+
+        window.fbAsyncInit = function () {
+            FB.init({
+                appId: '1753687224853096',
+                cookie: true,
+                xfbml: true,
+                version: 'v2.2',
+                status: true
+            });
+
+            //FB.getLoginStatus(function (response) {
+            //    statusChangeCallback(response);
+            //});
+        };
+
+        (function (d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) { return; }
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/pt_BR/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+
+        function logarViaFacebook() {
+            FB.login(
+                function (response) {
+                    if (response.authResponse) {
+                        FB.api('/me?fields=id,name,email,permissions', function (accountResponse) {
+                            facebookAccount = {
+                                Id: accountResponse.id,
+                                Nome: accountResponse.name,
+                                Email: accountResponse.email,
+                                AccessToken: response.authResponse.accessToken
+                            }
+                            $.ajax({
+                                url: '/Home/LogarPeloFacebook',
+                                type: "POST",
+                                contentType: "application/json",
+                                data: JSON.stringify(facebookAccount),
+                                success: function (result) {
+                                    switch (result.info) {
+                                        case "solicitarDefinicaoPerfil":
+                                            //$("#divDefinicaoPerfil").show();
+                                            break;
+                                        case "redirect":
+                                            //window.location.href = result.data;
+                                            break;
+                                        case "exigirSenhaEmailEncontrado":
+                                            //$("#divEmailEncontrado").show();
+                                            break;
+                                    }
+                                }
+                            });
+                        });
+                    } else {
+                        console.log('User cancelled login or did not fully authorize.');
+                    }
+                },
+                { scope: 'public_profile,email' }
+            );
+        }
+    </script>
+</body>
+</html>

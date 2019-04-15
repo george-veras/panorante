@@ -1,0 +1,57 @@
+﻿@{
+    ViewBag.Title = "Buscar Profissionais";
+    Layout = null;
+}
+
+@using EuFaco.DataAccess.Models
+@model List<UsuarioProfissional>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <input id="txtPesquisa" type="text" value="" />
+        <br />
+        <input id="btnPesquisar" type="button" value="pesquisar" onclick="pesquisar();" />
+    </div>
+</div>
+<div class="list-group" id="lista">
+    @if (Model.Count > 0)
+    {
+        foreach (UsuarioProfissional profissional in Model)
+        {
+            <a class="list-group-item" id="@String.Concat("aProf", profissional.Id)">
+                <h4 class="list-group-item-heading">@profissional.Nome</h4>
+                <input type="button" value="Abrir" onclick="@String.Format("seguir({0})", profissional.Id)" />
+                <p class="list-group-item-text">
+                    <h4>@profissional.Email        Cadastrado desde: @profissional.DataHoraCadastro.ToString("dd/MM/yyyy")</h4>
+                    <span>@profissional.Resumo</span>
+                    <br>
+                </p>
+            </a>
+        }
+    }
+</div>
+
+<script>
+    function seguir(n) {
+        var link = '/Perfil/Profissional/' + n;
+        location.href = link;
+    }
+
+    function pesquisar() {
+        pesquisa = {
+            nome: $('#txtPesquisa').val()
+        }
+        $.ajax({
+            url: '/Buscador/PesquisarProfissionaisPorNome',
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(pesquisa),
+            success: function (result) {
+                $('#lista').empty();
+                $.each(result, function (i, item) {
+                    $('#lista').append('<a class="list-group-item" id="aProf' + item.Id + '"><h4 class="list-group-item-heading">' + item.Nome + '</h4><input type="button" value="Abrir" onclick="seguir(' + item.Id + ')" /><p class="list-group-item-text"><h4>' + item.Email + '        Cadastrado desde: ' + item.DataHoraCadastro + '</h4><span>' + item.Resumo + '</span><br></p></a>');
+                });
+            }
+        });
+    }
+</script>

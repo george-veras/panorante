@@ -1,0 +1,159 @@
+﻿@{
+    ViewBag.Title = "Publicando Imagem";
+    Layout = null;
+}
+
+@section styles{
+
+    <link href="~/Content/jquery.tagit.css" rel="stylesheet" />
+}
+
+@section scripts{
+    <script src="~/Scripts/jquery-ui-1.11.4.min.js"></script>
+    <script src="~/Scripts/tag-it.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#etiquetas").tagit({
+                fieldName: "etiquetas",
+                tagLimit: 7,
+                availableTags: ["Quarto", "Sala", "Cozinha", "Banheiro", "Oxi"]
+            });
+        });
+
+        function mostrarImagem(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#imgPublicacao').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function publicarImagem() {
+            @* Cria o elemento iframe *@
+            var iframe = document.createElement("iframe");
+            iframe.setAttribute("id", "upload_iframe");
+            iframe.setAttribute("name", "upload_iframe");
+            iframe.setAttribute("width", "0");
+            iframe.setAttribute("height", "0");
+            iframe.setAttribute("border", "0");
+            iframe.setAttribute("style", "width: 0; height: 0; border: none;");
+
+            @* Adiciona ao documento *@
+            form = document.getElementById("frmImagem");
+            form.parentNode.appendChild(iframe);
+            window.frames['upload_iframe'].name = "upload_iframe";
+            iframeId = document.getElementById("upload_iframe");
+
+            @* Adiciona evento *@
+            var eventHandler = function () {
+                if (iframeId.detachEvent)
+                    iframeId.detachEvent("onload", eventHandler);
+                else
+                    iframeId.removeEventListener("load", eventHandler, false);
+
+                @* Mensagem do servidor *@
+                if (iframeId.contentDocument) {
+                    content = iframeId.contentDocument.body.innerHTML;
+                } else if (iframeId.contentWindow) {
+                    content = iframeId.contentWindow.document.body.innerHTML;
+                } else if (iframeId.document) {
+                    content = iframeId.document.body.innerHTML;
+                }
+
+                @* Deleta o elemento iframe *@
+                setTimeout('iframeId.parentNode.removeChild(iframeId)', 250);
+            }
+
+            if (iframeId.addEventListener)
+                iframeId.addEventListener("load", eventHandler, true);
+            if (iframeId.attachEvent)
+                iframeId.attachEvent("onload", eventHandler);
+
+            @* Seta as propriedades do form *@
+            form.setAttribute("target", "upload_iframe");
+            form.setAttribute("action", 'SalvarPublicacaoImagem');
+            form.setAttribute("method", "post");
+            form.setAttribute("enctype", "multipart/form-data");
+            form.setAttribute("encoding", "multipart/form-data");
+
+            @* Submete o form *@
+            form.submit();
+        }
+    </script>
+}
+
+<div class="container be-detail-container">
+    <div class="row">
+        <div class="col-xs-12 col-md-3 left-feild">
+            <div class="be-vidget back-block">
+                <a class="btn full color-1 size-1 hover-1"><i class="fa fa-chevron-left"></i>voltar ao perfil</a>
+            </div>
+            <div class="be-vidget hidden-xs hidden-sm" id="scrollspy">
+                <h3 class="letf-menu-article">
+                    Choose Category
+                </h3>
+                <div class="creative_filds_block">
+                    <ul class="ul nav">
+                        <li><a href="blog-detail-2.htmlbasic-information">Basic Information</a></li>
+                        <li><a href="blog-detail-2.htmledit-password">Edit Password</a></li>
+                        <li><a href="blog-detail-2.htmlon-the-web">On The Web</a></li>
+                        <li><a href="blog-detail-2.htmlabout-me">About Me</a></li>
+                        <li><a href="blog-detail-2.htmlweb-references">Web References</a></li>
+                    </ul>
+                </div>
+                <a class="btn full color-1 size-1 hover-1" onclick="publicarImagem();">publicar</a>
+            </div>
+
+        </div>
+        <div class="col-xs-12 col-md-9 _editor-content_">
+            <div class="affix-block" id="basic-information">
+                <div class="be-large-post">
+                    <div class="info-block style-2">
+                        <div class="be-large-post-align"><h3 class="info-block-label">Publicação de Imagem</h3></div>
+                    </div>
+                    <div class="be-large-post-align">
+                        <div class="row">
+                            <form id="frmImagem">
+                                <div id="divImagem" class="input-col col-xs-12">
+                                    <div class="form-group focus-2">
+                                        <img id="imgPublicacao" src="" />
+                                    </div>
+                                </div>
+                                <div id="divLegenda" class="input-col col-xs-12">
+                                    <div class="form-group focus-2">
+                                        <div class="form-label">Texto</div>
+                                        <input id="txtLegenda" name="txtLegenda" class="form-input" type="text" value="Legenda">
+                                    </div>
+                                </div>
+
+
+
+
+                                <div id="divEtiquetas" class="input-col col-xs-12">
+                                    <ul id="etiquetas">
+                                        <li>Tag1</li>
+                                        <li>Tag2</li>
+                                    </ul>
+                                </div>
+
+
+
+
+
+                                <div class="input-col col-xs-12">
+                                    <div class="form-group focus-2">
+                                        <input type="file" id="fileImagemPublicacao" name="fileImagemPublicacao" onchange="mostrarImagem(this);" />
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <a class="btn full color-1 size-1 hover-1 add_section">publicar</a>
+        </div>
+    </div>
+</div>

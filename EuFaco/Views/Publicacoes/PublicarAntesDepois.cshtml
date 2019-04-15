@@ -1,0 +1,200 @@
+﻿@{
+    ViewBag.Title = "Publicando Antes & Depois";
+    Layout = null;
+}
+
+@section styles{
+    <link rel="stylesheet" href="~/Content/twentytwenty.css" type="text/css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/flick/jquery-ui.css" />
+    <link href="~/Content/jquery.tagit.css" rel="stylesheet" />
+}
+
+@section scripts{
+    <script src="~/Scripts/jquery.event.move.js" type="text/javascript"></script>
+    <script src="~/Scripts/jquery.twentytwenty.js" type="text/javascript"></script>
+    <script src="~/Scripts/jquery-ui-1.11.4.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/tag-it.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("#myTags").tagit({
+                availableTags: ["pintura", "textura", "decoração", "sala", "branco", "quarto", "design"],
+                beforeTagAdded: function (event, ui) {
+                    if ($.inArray(ui.tagLabel, ["pintura", "textura", "decoração", "sala", "branco", "quarto", "design"]) == -1) {
+                        return false;
+                    }
+                    if (ui.tagLabel == "not found") {
+                        return false;
+                    }
+                }
+            });
+        });
+
+        function mostrarImagemAntes(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#imgAntes').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+
+                if ($("#imagemDepois").val() != 0) {
+                    $("#divAntesDepois").twentytwenty();
+                }
+            }
+        }
+
+        function mostrarImagemDepois(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#imgDepois').attr('src', e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+
+                if ($("#imagemDepois").val() != 0) {
+                    $("#divAntesDepois").twentytwenty();
+                }
+            }
+        }
+
+        function publicarAntesDepois() {
+            @* Cria o elemento iframe *@
+            var iframe = document.createElement("iframe");
+            iframe.setAttribute("id", "upload_iframe");
+            iframe.setAttribute("name", "upload_iframe");
+            iframe.setAttribute("width", "0");
+            iframe.setAttribute("height", "0");
+            iframe.setAttribute("border", "0");
+            iframe.setAttribute("style", "width: 0; height: 0; border: none;");
+
+            @* Adiciona ao documento *@
+            form = document.getElementById("frmAntesDepois");
+            form.parentNode.appendChild(iframe);
+            window.frames['upload_iframe'].name = "upload_iframe";
+            iframeId = document.getElementById("upload_iframe");
+
+            @* Adiciona evento *@
+            var eventHandler = function () {
+                if (iframeId.detachEvent)
+                    iframeId.detachEvent("onload", eventHandler);
+                else
+                    iframeId.removeEventListener("load", eventHandler, false);
+
+                @* Mensagem do servidor *@
+                if (iframeId.contentDocument) {
+                    content = iframeId.contentDocument.body.innerHTML;
+                } else if (iframeId.contentWindow) {
+                    content = iframeId.contentWindow.document.body.innerHTML;
+                } else if (iframeId.document) {
+                    content = iframeId.document.body.innerHTML;
+                }
+
+                @* Deleta o elemento iframe *@
+                setTimeout('iframeId.parentNode.removeChild(iframeId)', 250);
+            }
+
+            if (iframeId.addEventListener)
+                iframeId.addEventListener("load", eventHandler, true);
+            if (iframeId.attachEvent)
+                iframeId.attachEvent("onload", eventHandler);
+
+            @* Seta as propriedades do form *@
+            form.setAttribute("target", "upload_iframe");
+            form.setAttribute("action", 'SalvarPublicacaoAntesDepois');
+            form.setAttribute("method", "post");
+            form.setAttribute("enctype", "multipart/form-data");
+            form.setAttribute("encoding", "multipart/form-data");
+
+            @* Submete o form *@
+            form.submit();
+        }
+    </script>
+}
+
+<div class="container be-detail-container">
+    <div class="row">
+        <div class="col-xs-12 col-md-3 left-feild">
+            <div class="be-vidget back-block">
+                <a class="btn full color-1 size-1 hover-1"><i class="fa fa-chevron-left"></i>voltar ao perfil</a>
+            </div>
+            <div class="be-vidget hidden-xs hidden-sm" id="scrollspy">
+                <h3 class="letf-menu-article">
+                    Choose Category
+                </h3>
+                <div class="creative_filds_block">
+                    <ul class="ul nav">
+                        <li><a href="blog-detail-2.htmlbasic-information">Basic Information</a></li>
+                        <li><a href="blog-detail-2.htmledit-password">Edit Password</a></li>
+                        <li><a href="blog-detail-2.htmlon-the-web">On The Web</a></li>
+                        <li><a href="blog-detail-2.htmlabout-me">About Me</a></li>
+                        <li><a href="blog-detail-2.htmlweb-references">Web References</a></li>
+                    </ul>
+                </div>
+                <a class="btn full color-1 size-1 hover-1" onclick="publicarAntesDepois();">publicar</a>
+            </div>
+
+        </div>
+        <div class="col-xs-12 col-md-9 _editor-content_">
+            <div class="affix-block" id="basic-information">
+                <div class="be-large-post">
+                    <div class="info-block style-2">
+                        <div class="be-large-post-align"><h3 class="info-block-label">Publicação Antes & Depois</h3></div>
+                    </div>
+                    <div class="be-large-post-align">
+                        <div class="row">
+                            <form id="frmAntesDepois">
+                                <div class="input-col col-xs-12 col-sm-6">
+                                    <div class="form-label">Estado</div>
+                                    <div class="be-drop-down icon-none">
+                                        <span class="be-dropdown-content">Rio de Janeiro</span>
+                                        <ul class="drop-down-list">
+                                            <li><a>Rio de Janeiro</a></li>
+                                            <li><a>São Paulo</a></li>
+                                            <li><a>Paraná</a></li>
+                                            <li><a>Bahia</a></li>
+                                            <li><a>Brasília</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="input-col col-xs-12 col-sm-6">
+                                    <div class="form-group focus-2">
+                                        <div class="form-label">Cidade</div>
+                                        <input class="form-input" type="text" value="Rio de Janeiro">
+                                    </div>
+                                </div>
+                                <div id="divTitulo" class="input-col col-xs-12">
+                                    <div class="form-group focus-2">
+                                        <div class="form-label">Título</div>
+                                        <input id="txtTitulo" name="txtTitulo" class="form-input" type="text" value="Título">
+                                    </div>
+                                </div>
+                                <div id="divImagens" class="input-col col-xs-12">
+                                    <div class="form-group focus-2">
+                                        <div id="divAntesDepois">
+                                            <img id="imgAntes" src="" />
+                                            <img id="imgDepois" src="" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="divTexto" class="input-col col-xs-12">
+                                    <div class="form-group focus-2">
+                                        <div class="form-label">Texto</div>
+                                        <input id="txtTexto" name="txtTexto" class="form-input" type="text" value="Texto">
+                                    </div>
+                                </div>
+                                <div class="col-xs-12">
+                                    <input type="file" id="imagemAntes" name="imagemAntes" onchange="mostrarImagemAntes(this);" />
+                                </div>
+                                <div class="col-xs-12">
+                                    <input type="file" id="imagemDepois" name="imagemDepois" onchange="mostrarImagemDepois(this);" />
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <a class="btn full color-1 size-1 hover-1 add_section"><i class="fa fa-plus"></i>publicar</a>
+        </div>
+    </div>
+</div>
+

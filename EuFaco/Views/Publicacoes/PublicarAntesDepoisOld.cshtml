@@ -1,0 +1,169 @@
+﻿@{
+    ViewBag.Title = "Publicar Antes & Depois";
+    Layout = null;
+}
+
+@section styles{
+    <link rel="stylesheet" href="~/Content/twentytwenty.css" type="text/css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/flick/jquery-ui.css" />
+    <link href="~/Content/jquery.tagit.css" rel="stylesheet" />
+}
+
+@section scripts{
+    <script src="~/Scripts/jquery.event.move.js" type="text/javascript"></script>
+    <script src="~/Scripts/jquery.twentytwenty.js" type="text/javascript"></script>
+    <script src="~/Scripts/jquery-ui-1.11.4.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/tag-it.min.js"></script>
+    <script type="text/javascript">
+        $(window).load(function () {
+            $("#imagemAntes").change(function () {
+                lerURLAntes(this);
+
+                if ($("#imagemDepois").val() != 0) {
+                    $("#container1").twentytwenty();
+                }
+            });
+
+            $("#imagemDepois").change(function () {
+                lerURLDepois(this);
+
+                if ($("#imagemAntes").val() != 0) {
+                    $("#container1").twentytwenty();
+                }
+            });
+        });
+
+        $(document).ready(function() {
+            $("#myTags").tagit({
+                availableTags: ["pintura", "textura", "decoração", "sala", "branco", "quarto", "design"],
+                beforeTagAdded: function (event, ui) {
+                    if ($.inArray(ui.tagLabel, ["pintura", "textura", "decoração", "sala", "branco", "quarto", "design"]) == -1) {
+                        return false;
+                    }
+                    if (ui.tagLabel == "not found") {
+                        return false;
+                    }
+                }
+            });
+        });
+
+        function lerURLAntes(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#imgAntes').attr('src', e.target.result);
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function lerURLDepois(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#imgDepois').attr('src', e.target.result);
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function fileUpload(form, div_id) {
+            // Create the iframe...
+            var iframe = document.createElement("iframe");
+            iframe.setAttribute("id", "upload_iframe");
+            iframe.setAttribute("name", "upload_iframe");
+            iframe.setAttribute("width", "0");
+            iframe.setAttribute("height", "0");
+            iframe.setAttribute("border", "0");
+            iframe.setAttribute("style", "width: 0; height: 0; border: none;");
+
+            // Add to document...
+            form.parentNode.appendChild(iframe);
+            window.frames['upload_iframe'].name = "upload_iframe";
+
+            iframeId = document.getElementById("upload_iframe");
+
+            // Add event...
+            var eventHandler = function () {
+
+                if (iframeId.detachEvent)
+                    iframeId.detachEvent("onload", eventHandler);
+                else
+                    iframeId.removeEventListener("load", eventHandler, false);
+
+                // Message from server...
+                if (iframeId.contentDocument) {
+                    content = iframeId.contentDocument.body.innerHTML;
+                } else if (iframeId.contentWindow) {
+                    content = iframeId.contentWindow.document.body.innerHTML;
+                } else if (iframeId.document) {
+                    content = iframeId.document.body.innerHTML;
+                }
+
+                document.getElementById(div_id).innerHTML = content;
+
+                // Del the iframe...
+                setTimeout('iframeId.parentNode.removeChild(iframeId)', 250);
+            }
+
+            if (iframeId.addEventListener)
+                iframeId.addEventListener("load", eventHandler, true);
+            if (iframeId.attachEvent)
+                iframeId.attachEvent("onload", eventHandler);
+
+            // Set properties of form...
+            form.setAttribute("target", "upload_iframe");
+            form.setAttribute("action", 'UploadImagensAntesDepois');
+            form.setAttribute("method", "post");
+            form.setAttribute("enctype", "multipart/form-data");
+            form.setAttribute("encoding", "multipart/form-data");
+
+            // Submit the form...
+            form.submit();
+
+            document.getElementById(div_id).innerHTML = "Uploading...";
+        }
+    </script>
+}
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <br />
+        <div id="container1">
+            <img id="imgAntes" src="" />
+            <img id="imgDepois" src="" />
+        </div>
+        <br />
+        <form>
+            <span>Aponte a imagem de como era antes</span>
+            <br />
+            <input type="file" id="imagemAntes" name="imagemAntes" />
+            <br />
+            <span>Aponte a imagem de como ficou</span>
+            <br />
+            <input type="file" id="imagemDepois" name="imagemDepois" />
+            <div id="upload"></div>
+            <br />
+            <span>Acrescente um título</span>
+            <br />
+            <input id="txtTitulo" name="txtTitulo" type="text" value="" />
+            <br />
+            <span>Acrescente uma legenda</span>
+            <br />
+            <input id="txtTexto" name="txtTexto" type="text" value="" />
+            <br />
+            <span>Acrescente etiquetas</span>
+            <br />
+            <ul id="myTags">
+                <li>Tag1</li>
+            </ul>
+            <br />
+            <input type="button" value="Enviar" onclick="fileUpload(this.form,'upload'); return false;">
+            <br />
+        </form>
+    </div>
+</div>

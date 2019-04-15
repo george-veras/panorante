@@ -1,0 +1,434 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Codinome Eu Faço</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+    <script>
+        function testAPI() {
+            console.log('Welcome! Fetching your information.... ');
+            FB.api('/me?fields=id,name,email,permissions', function (response) {
+                console.log('Successful login for: ' + response.name);
+                console.log(JSON.stringify(response));
+                document.getElementById('status').innerHTML = document.getElementById('status').innerHTML + '<br/>' + JSON.stringify(response);
+                document.getElementById('status').innerHTML = document.getElementById('status').innerHTML + '<br/>' + 'Obrigado por logar, ' + response.email + '!';
+            });
+            FB.api('/me/permissions', function (response) {
+                console.log(response);
+                document.getElementById('status').innerHTML = document.getElementById('status').innerHTML + '<br/>' + JSON.stringify(response);
+            });
+        }
+
+        function statusChangeCallback(response) {
+            console.log('statusChangeCallback');
+            console.log(response);
+            document.getElementById('status').innerHTML = JSON.stringify(response);
+            if (response.status == 'connected') {
+                testAPI();
+            } else if (response.status == 'not_authorized') {
+                document.getElementById('status').innerHTML = 'Por favor, logue neste app.';
+            } else {
+                document.getElementById('status').innerHTML = 'Por favor, logue no Facebook.';
+            }
+        }
+
+        function checkLoginState() {
+            FB.getLoginStatus(function (response) {
+                statusChangeCallback(response);
+            });
+        }
+
+        window.fbAsyncInit = function () {
+            FB.init({
+                appId: '1753687224853096',
+                cookie: true,
+                xfbml: true,
+                version: 'v2.2',
+                status: true
+            });
+
+            FB.getLoginStatus(function (response) {
+                statusChangeCallback(response);
+            });
+        };
+
+        (function (d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) { return; }
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/pt_BR/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+
+        ////Sugestão do StackOverflow para testar se FB está definido.
+        //if (typeof(FB) != 'undefined' && FB != null) {
+        //    // run the app
+        //} else {
+        //    // alert the user
+        //}
+
+        function logarViaFacebook() {
+            FB.login(
+                function (response) {
+                    if (response.authResponse) {
+                        FB.api('/me?fields=id,name,email,permissions', function (accountResponse) {
+                            facebookAccount = {
+                                Id: accountResponse.id,
+                                Nome: accountResponse.name,
+                                Email: accountResponse.email,
+                                AccessToken: response.authResponse.accessToken
+                            }
+                            $.ajax({
+                                url: '/Home/LogarPeloFacebook',
+                                type: "POST",
+                                contentType: "application/json",
+                                data: JSON.stringify(facebookAccount),
+                                success: function (result) {
+                                    switch (result.info) {
+                                        case "solicitarDefinicaoPerfil":
+                                            $("#divDefinicaoPerfil").show();
+                                            break;
+                                        case "redirect":
+                                            window.location.href = result.data;
+                                            break;
+                                        case "exigirSenhaEmailEncontrado":
+                                            $("#divEmailEncontrado").show();
+                                            break;
+                                    }
+                                }
+                            });
+                        });
+                    } else { 
+                        console.log('User cancelled login or did not fully authorize.');
+                    }
+                },
+                { scope: 'public_profile,email' }
+            );
+        }
+
+        function cadastrarPerfil() {
+            perfilEscolhido = {
+                tipoPerfil: $('#divDefinicaoPerfil input[name=rdoTipoPerfil]:checked').val()
+            }
+            $.ajax({
+                url: '/Home/DefinirPerfil',
+                type: "POST",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(perfilEscolhido),
+                success: function (result) {
+                    switch (result.info) {
+                        case "redirect":
+                            window.location.href = result.data;
+                            break;
+                    }
+                }
+            });
+        }
+        
+        function confirmarSenha() {
+            alert($('#divEmailEncontrado #txtConfirmarEmailSenha').val());
+            confirmacaoUsuario = {
+                senha: $('#divEmailEncontrado #txtConfirmarEmailSenha').val()
+            }
+            $.ajax({
+                url: '/Home/ConfirmarUsuario',
+                type: "POST",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(confirmacaoUsuario),
+                success: function (result) {
+                    switch (result.info) {
+                        case "redirect":
+                            window.location.href = result.data;
+                            break;
+                    }
+                }
+            });
+        }
+    </script>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Codinome Eu Faço</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                </ul>
+            </div>
+            <!--/.navbar-collapse -->
+        </div>
+    </nav>
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron">
+    </div>
+
+    <div class="container">
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <h2>Cadastre-se, é grátis!</h2>
+                <span>Nome:</span>
+                <input id="txtNome" type="text" value="Nome" />
+                <br />
+                <span>Email:</span>
+                <input id="txtEmail" type="text" value="Email" />
+                <br />
+                <span>Senha:</span>
+                <input id="txtSenha" type="text" value="Senha" />
+                <br />
+                <span>Sexo:</span>
+                <input type="radio" name="Sexo" value="Masculino" checked="checked" />Masculino
+                <input type="radio" name="Sexo" value="Feminino" />Feminino
+                <br />
+
+                <select id="dropdownDia">
+                    @for (int dia = 1; dia <= 31; dia++)
+                    {
+                        <option value="@dia">@dia</option>
+                    }
+                </select>
+                
+                <select id="dropdownMes">
+                    <option value="1">Janeiro</option>
+                    <option value="2">Fevereiro</option>
+                    <option value="3">Março</option>
+                    <option value="4">Abril</option>
+                    <option value="5">Maio</option>
+                    <option value="6">Junho</option>
+                    <option value="7">Julho</option>
+                    <option value="8">Agosto</option>
+                    <option value="9">Setembro</option>
+                    <option value="10">Outubro</option>
+                    <option value="11">Novembro</option>
+                    <option value="12">Dezembro</option>
+                </select>
+
+                <select id="dropdownAno">
+                    @for (int ano = 1997; ano >= 1960; ano--)
+                    {
+                        <option value="@ano">@ano</option>
+                    }
+                </select>
+                
+                <br />
+                <span>Localidade:</span>
+                <input id="txtLocalidade" type="text" value="Localidade" />
+                <br />
+                <input id="btnSubmit" type="button" value="Cadastrar" onclick="cadastrarUsuarioProfissional();" />
+                <p id="product" />
+                <ul id="products" />
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <h2>Já sou Cadastrado!</h2>
+                <span>Email:</span>
+                <input id="txtEmailLogin" type="text" value="george@eufaco.com.br" />
+                <br />
+                <span>Senha:</span>
+                <input id="txtSenhaLogin" type="text" value="MinhaSenha" />
+                <br />
+                <input id="btnSubmitLogin" type="button" value="Logar" onclick="logarUsuarioProfissional();" />
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <h4>Cadastro teste dos clientes (usuários particulares)</h4>
+                <span>Nome:</span>
+                <input id="txtNomeUsuarioParticular" type="text" value="Nome" />
+                <br />
+                <span>Email:</span>
+                <input id="txtEmailUsuarioParticular" type="text" value="Email" />
+                <br />
+                <span>Senha:</span>
+                <input id="txtSenhaUsuarioParticular" type="text" value="Senha" />
+                <br />
+                <input id="btnSubmeterUsuarioParticular" type="button" value="Cadastrar" onclick="cadastrarUsuarioParticular();" />
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <h4>Login do particular</h4>
+                <span>Email:</span>
+                <input id="txtEmailLoginUsuarioParticular" type="text" value="Email" />
+                <br />
+                <span>Senha:</span>
+                <input id="txtSenhaLoginUsuarioParticular" type="text" value="Senha" />
+                <br />
+                <input id="btnLogarUsuarioParticular" type="button" value="Logar" onclick="logarUsuarioParticular();" />
+                <input id="btnEsqueciMinhaSenha" type="button" value="Esqueci minha senha" onclick="lembrarSenha();" />
+                <br>
+                <fb:login-button scope="public_profile,email" data-auto-logout-link="true" onlogin="checkLoginState();"></fb:login-button>
+                <br>
+                @*Segundo o Facebook, é importante que a janela de login seja invocada por um button, para o navegador não bloquea-la.*@
+                <button id="btnLoginFacebook" onclick="logarViaFacebook();">Teste de Login pelo Facebook</button>
+                <br>
+                <div id="status"></div>
+            </div>
+        </div>
+
+        <div id="divDefinicaoPerfil" class="panel panel-default" style="display:none">
+            <div class="panel-body">
+                <h4>Novo usuário! Obrigatório a definição de perfil.</h4>
+                <br/>
+                <input type="radio" name="rdoTipoPerfil" value="Particular" checked="checked" />Particular
+                <input type="radio" name="rdoTipoPerfil" value="Profissional" />Profissional
+                <br />
+                <input id="btnSubmeterUsuarioParticular" type="button" value="Confirmar" onclick="cadastrarPerfil();" />
+            </div>
+        </div>
+
+        <div id="divEmailEncontrado" class="panel panel-default" style="display:none">
+            <div class="panel-body">
+                <h4>O e-mail informado pelo Facebook já consta em nossa base de dados, por favor digite a senha referente a ele.</h4>
+                <br />
+                <input id="txtConfirmarEmailSenha" type="text" value="Senha" />
+                <br />
+                <input id="btnConfirmarEmailSenha" type="button" value="Confirmar" onclick="confirmarSenha();" />
+            </div>
+        </div>
+
+        <hr />
+        <footer>
+            <p>&copy; 2015 Company, Inc.</p>
+        </footer>
+    </div>
+    <!-- /container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="~/Scripts/jquery-2.2.0.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    
+    <script>
+        function cadastrarUsuarioProfissional() {
+            cadastro = {
+                Nome: $('#txtNome').val(),
+                Sobrenome: $('#txtSobrenome').val(),
+                Email: $('#txtEmail').val(),
+                Senha: $('#txtSenha').val(),
+                Localidade: $('#txtLocalidade').val(),
+                DataNascimento: $('#dropdownDia').val() + '/' + $('#dropdownMes').val() + '/' + $('#dropdownAno').val(),
+                Sexo: $('input[name=Sexo]:checked').val()
+            }
+            $.ajax({
+                url: '/Home/CadastrarUsuarioProfissional',
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(cadastro),
+                success: function (result) {
+                    location.replace(result);
+                    //if (request.getResponseHeader('REQUIRES_AUTH') == '1') {
+                    //    alert('opa');
+                    //    window.location = '/Teste';
+                    //}
+                }
+            });
+        }
+
+        function cadastrarUsuarioParticular() {
+            cadastroUsuarioParticular = {
+                Nome: $('#txtNomeUsuarioParticular').val(),
+                Email: $('#txtEmailUsuarioParticular').val(),
+                Senha: $('#txtSenhaUsuarioParticular').val()
+            }
+            $.ajax({
+                url: '/Home/CadastrarUsuarioParticular',
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(cadastroUsuarioParticular),
+                success: function (result) {
+                    location.replace(result);
+                }
+            });
+        }
+
+        function logar() {
+            login = {
+                Email: $('#txtEmailLogin').val(),
+                Senha: $('#txtSenhaLogin').val(),
+            }
+            $.ajax({
+                url: '/CreateProfile/Logar',
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(login),
+                success: function (result) {
+                    location.replace(result);
+                }
+            });
+        }
+
+        function logarUsuarioProfissional() {
+            login = {
+                Email: $('#txtEmailLogin').val(),
+                Senha: $('#txtSenhaLogin').val(),
+            }
+            $.ajax({
+                url: '/Home/LogarUsuarioProfissional',
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(login),
+                success: function (result) {
+                    location.replace(result);
+                }
+            });
+        }
+
+        function logarUsuarioParticular() {
+            loginParticular = {
+                Email: $('#txtEmailLoginUsuarioParticular').val(),
+                Senha: $('#txtSenhaLoginUsuarioParticular').val()
+            }
+            $.ajax({
+                url: '/Home/LogarUsuarioParticular',
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(loginParticular),
+                success: function (result) {
+                    location.replace(result);
+                }
+            });
+        }
+
+        function lembrarSenha() {
+            loginParticular = {
+                Email: $('#txtEmailLoginUsuarioParticular').val()
+            }
+            $.ajax({
+                url: '/Home/EnviarSenhaPorEmail',
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(loginParticular),
+                success: function (result) {
+                    location.replace(result);
+                }
+            });
+        }
+    </script>
+</body>
+</html>

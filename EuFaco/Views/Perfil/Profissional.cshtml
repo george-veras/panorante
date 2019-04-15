@@ -1,0 +1,181 @@
+﻿@{
+    ViewBag.Title = "Profissional";
+    Layout = null;
+}
+
+@model EuFaco.DataAccess.Models.UsuarioProfissional
+
+<!--Painel da foto e nome-->
+<div class="panel panel-default">
+    <div id="panelDadosGerais" class="panel-body">
+        <img src="~/Images/picture.png" alt="..." style="width: 150px; height: 150px">
+        <span id="spanNome">@Model.Nome</span><br>
+        <span id="spanEmail">@Model.Email</span><br>
+        <br/>
+        <span id="spanLocalidade">@if (Model.Municipio != null) { @Model.Municipio.Id }</span>
+        <input id="txtLocalidade" type="text" value="Localidade" style="display:none" />
+        <br/>
+        <span>@Model.Sexo</span><br/>
+        <span>@if (Model.DataNascimento.HasValue) { Model.DataNascimento.Value.ToString("dd/MM/yyyy"); }</span>
+    </div>
+    <input type="button" id="btnMensagem" value="Enviar Mensagem" onclick="abrirMensagem();"/>
+    <div id="divMensagem" style="display:none" >
+        <form>
+            <span>Mensagem:</span>
+            <input id="txtMensagem" type="text" value="" />
+            <br>
+            <input id="btnCancelarMensagem" type="button" value="Cancelar" onclick="cancelarMensagem();" />
+            <input id="btnSubmitMensagem" type="button" value="Salvar" onclick="submeterMensagem(@Model.Id);" />
+            <br>
+        </form>
+    </div>
+    <br/>
+</div>
+
+<!--Painel de descrição-->
+<div class="panel panel-default">
+    <div class="panel-body" id="panelDescricao">
+        <h3>Resumo</h3>
+        <hr />
+        <span id="spanDescricao">@Model.Resumo</span>
+        <br />
+        Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.
+    </div>
+    
+</div>
+
+<!--Painel de serviço-->
+<div class="panel panel-default">
+    <div class="panel-body">
+        <h3>Minhas Fotos</h3>
+        <hr />
+        <div class="row">
+            @if (Model.Imagens != null)
+            {
+                foreach (var imagem in Model.Imagens)
+                {
+                    <div class="col-sm-3 col-md-2">
+                        <div class="thumbnail">
+                            <a href="/Imagens/Imagem/@imagem.Id"><img src="@imagem.PathImagem" alt="..." style="width:300px; height:150px"></a>
+                            <div class="caption">
+                                <span id="@String.Concat("spanLegenda", imagem.Id.ToString())">@imagem.Legenda</span>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+                    
+        </div>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <h3>Avaliações</h3>
+        <hr />
+        @if (Model.Avaliacoes != null)
+        {
+            foreach (var avaliacao in Model.Avaliacoes)
+            {
+
+                <div class="media">
+                    <div class="media-left">
+                        <a href="#">
+                            <img class="media-object" data-src="holder.js/64x64" alt="64x64" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+PCEtLQpTb3VyY2UgVVJMOiBob2xkZXIuanMvNjR4NjQKQ3JlYXRlZCB3aXRoIEhvbGRlci5qcyAyLjYuMC4KTGVhcm4gbW9yZSBhdCBodHRwOi8vaG9sZGVyanMuY29tCihjKSAyMDEyLTIwMTUgSXZhbiBNYWxvcGluc2t5IC0gaHR0cDovL2ltc2t5LmNvCi0tPjxkZWZzPjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+PCFbQ0RBVEFbI2hvbGRlcl8xNTE1ZTMyNWI2NSB0ZXh0IHsgZmlsbDojQUFBQUFBO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1mYW1pbHk6QXJpYWwsIEhlbHZldGljYSwgT3BlbiBTYW5zLCBzYW5zLXNlcmlmLCBtb25vc3BhY2U7Zm9udC1zaXplOjEwcHQgfSBdXT48L3N0eWxlPjwvZGVmcz48ZyBpZD0iaG9sZGVyXzE1MTVlMzI1YjY1Ij48cmVjdCB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIGZpbGw9IiNFRUVFRUUiLz48Zz48dGV4dCB4PSIxNC41IiB5PSIzNi41Ij42NHg2NDwvdGV4dD48L2c+PC9nPjwvc3ZnPg==" data-holder-rendered="true" style="width: 64px; height: 64px;">
+                        </a>
+                    </div>
+                    <div class="media-body">
+                        <h4 class="media-heading">@avaliacao.Resumo  @avaliacao.Nota</h4>
+                        @avaliacao.Texto
+                        @if (avaliacao.Comentarios.Count > 0)
+                        {
+                            foreach (var comentario in avaliacao.Comentarios)
+                            {
+
+                            <div class="media">
+                                <div class="media-left">
+                                    <a href="#">
+                                        <img class="media-object" data-src="holder.js/64x64" alt="64x64" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+PCEtLQpTb3VyY2UgVVJMOiBob2xkZXIuanMvNjR4NjQKQ3JlYXRlZCB3aXRoIEhvbGRlci5qcyAyLjYuMC4KTGVhcm4gbW9yZSBhdCBodHRwOi8vaG9sZGVyanMuY29tCihjKSAyMDEyLTIwMTUgSXZhbiBNYWxvcGluc2t5IC0gaHR0cDovL2ltc2t5LmNvCi0tPjxkZWZzPjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+PCFbQ0RBVEFbI2hvbGRlcl8xNTE1ZTMyN2QwNSB0ZXh0IHsgZmlsbDojQUFBQUFBO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1mYW1pbHk6QXJpYWwsIEhlbHZldGljYSwgT3BlbiBTYW5zLCBzYW5zLXNlcmlmLCBtb25vc3BhY2U7Zm9udC1zaXplOjEwcHQgfSBdXT48L3N0eWxlPjwvZGVmcz48ZyBpZD0iaG9sZGVyXzE1MTVlMzI3ZDA1Ij48cmVjdCB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIGZpbGw9IiNFRUVFRUUiLz48Zz48dGV4dCB4PSIxNC41IiB5PSIzNi41Ij42NHg2NDwvdGV4dD48L2c+PC9nPjwvc3ZnPg==" data-holder-rendered="true" style="width: 64px; height: 64px;">
+                                    </a>
+                                </div>
+                                <div class="media-body">
+                                    <h4 class="media-heading">Cabeçalho</h4>
+                                    @comentario.Texto
+                                </div>
+                            </div>
+                            }
+                        }
+                    </div>
+                </div>
+            }
+        }
+        <form>
+            <h4>Avalie este profissional/empresa</h4>
+            Resumo:<input id="txtResumoAvaliacao" type="text" value="" />
+            <br>
+            Texto:<input id="txtTextoAvaliacao" type="text" value="" />
+            <br>
+            <input id="btnSubmitAvaliacao" type="button" value="Salvar" onclick="submeterAvaliacao(@Model.Id);" />
+            <br>
+            Nota:
+            <select id="dropdownNota">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+            <br>
+        </form>
+    </div>
+</div>
+<hr />
+<script>
+    function abrirMensagem() {
+        $("#btnMensagem").hide();
+        $("#divMensagem").show();
+    }
+
+    function cancelarMensagem() {
+        $("#divMensagem").hide();
+        $("#btnMensagem").show();
+    }
+
+    function submeterMensagem(n) {
+        mensagem = {
+            IdDestinatario: n,
+            Conteudo: $('#txtMensagem').val()
+        }
+        $.ajax({
+            url: '/Perfil/EnviarMensagem',
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(mensagem),
+            success: function (result) {
+                $('#txtMensagem').val('');
+                cancelarMensagem();
+                alert('Mensagem enviada com sucesso! :)');
+            }
+        });
+    }
+
+    function submeterAvaliacao(n) {
+        avaliacao = {
+            IdAvaliado: n,
+            Resumo: $('#txtResumoAvaliacao').val(),
+            Texto: $('#txtTextoAvaliacao').val(),
+            Nota: $('#dropdownNota').val()
+        }
+        $.ajax({
+            url: '/Perfil/SalvarAvaliacao',
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(avaliacao),
+            success: function (result) {
+                $('#txtResumoAvaliacao').val('');
+                $('#txtTextoAvaliacao').val('');
+                alert('Avaliacao enviada com sucesso! :)');
+            }
+        });
+    }
+</script>

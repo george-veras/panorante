@@ -1,0 +1,36 @@
+﻿@{
+    ViewBag.Title = "Pergunte à Comunidade";
+    Layout = null;
+}
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <span>Título</span>
+        <input id="txtTitulo" type="text" value="Titulo" />
+        <br />
+        <span>Pergunta:</span>
+        <input id="txtPergunta" type="text" value="Pergunta" />
+        <br />
+        <input id="txtEtiquetas" type="text" value="Etiquetas" />
+        <br />
+        <input id="btnPublicar" type="button" value="Publicar" onclick="publicarPergunta();" />
+    </div>
+</div>
+
+<script>
+    function publicarPergunta() {
+        pergunta = {
+            Titulo: $('#txtTitulo').val(),
+            Texto: $('#txtPergunta').val()
+        }
+        $.ajax({
+            url: '/Perguntas/PublicarPergunta',
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(pergunta),
+            success: function (result) {
+                alert('Pergunta publicada com sucesso! :)');
+            }
+        });
+    }
+</script>

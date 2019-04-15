@@ -1,0 +1,241 @@
+﻿@{
+    ViewBag.Title = "Mensagens";
+    Layout = "~/Views/Shared/_LayoutUsuarioProfissional.cshtml";
+}
+
+@using EuFaco.DataAccess.Models
+@model List<Mensagem>
+
+<!-- MAIN CONTENT -->
+<div class="row">
+    <div class="col-xs-12 col-sm-5 left-feild">
+        <a href="author-login.html" class="btn color-4 size-1 hover-7"><i class="fa fa-chevron-left"></i> back to profile</a>
+        <a href="blog-detail-2.html" class="btn btn-right color-1 size-1 hover-1"><i class="fa fa-envelope-o"></i> compose</a>
+
+        <form>
+            <div class="noto-header clearfix">
+                <div class="form-checkbox">
+                    <input id="ch1" class="select-all" type="checkbox" value="" name=""> <span class="check"><i class="fa fa-check"></i></span>
+                    <label for="ch1">select all</label>
+                </div>
+                <div class="stat-sort be-drop-down">
+                    <span class="be-dropdown-content">actions</span>
+                    <ul class="drop-down-list">
+                        <li><a>Featured</a></li>
+                        <li><a>Most Appreciated</a></li>
+                        <li><a>Most Viewed</a></li>
+                        <li><a>Most Discussed</a></li>
+                        <li><a>Most Recent</a></li>
+                    </ul>
+                </div>
+            </div>
+            @if (Model.Count > 0)
+            {
+                foreach (Mensagem mensagem in Model)
+                {
+                    <div class="noto-entry style-3">
+                        <div class="noto-content clearfix">
+                            <div class="form-checkbox">
+                                <input type="checkbox" value="" name=""> <span class="check"><i class="fa fa-check"></i></span>
+                            </div>
+                            <div class="noto-img">
+                                <a href="blog-detail-2.html">
+                                    <img src="~/Images/NRGNetwork/c1.png" alt="" class="be-ava-comment">
+                                </a>
+                            </div>
+                            <div class="noto-text">
+                                <div class="noto-text-top">
+                                    <span class="noto-name"><a href="blog-detail-2.html">@mensagem.Remetente.Nome</a></span>
+                                    <span class="noto-date"><i class="fa fa-clock-o"></i> @mensagem.DataHoraEnvio.ToString("dd/MM/yyyy")</span>
+                                </div>
+                                <div class="noto-message">@mensagem.Conteudo</div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+
+            <div class="noto-entry style-3">
+                <div class="noto-content clearfix">
+                    <div class="form-checkbox">
+                        <input type="checkbox" value="" name=""> <span class="check"><i class="fa fa-check"></i></span>
+                    </div>
+                    <div class="noto-img">
+                        <a href="blog-detail-2.html">
+                            <img src="~/Images/NRGNetwork/c1.png" alt="" class="be-ava-comment">
+                        </a>
+                    </div>
+                    <div class="noto-text">
+                        <div class="noto-text-top">
+                            <span class="noto-name"><a href="blog-detail-2.html">Ravi Sah</a></span>
+                            <span class="noto-date"><i class="fa fa-clock-o"></i> May 27, 2015</span>
+                        </div>
+                        <div class="noto-message">Sed velit mauris, pulvinar sit amet accumsan vitae, egestas, pulvinar sit amet accumsan vitae, egestas</div>
+                    </div>
+                </div>
+            </div>
+            <div class="noto-entry style-3">
+                <div class="noto-content clearfix">
+                    <div class="form-checkbox">
+                        <input type="checkbox" value="" name=""> <span class="check"><i class="fa fa-check"></i></span>
+                    </div>
+                    <div class="noto-img">
+                        <a href="blog-detail-2.html">
+                            <img src="~/Images/NRGNetwork/ava_3.jpg" alt="" class="be-ava-comment">
+                        </a>
+                    </div>
+                    <div class="noto-text">
+                        <div class="noto-text-top">
+                            <span class="noto-name"><a href="blog-detail-2.html">Louis Paquet</a></span>
+                            <span class="noto-date"><i class="fa fa-clock-o"></i> May 27, 2015</span>
+                        </div>
+                        <div class="noto-message">Pellentesque habitant morbi tristique senectus et netus...</div>
+                    </div>
+                </div>
+            </div>
+            <div class="noto-entry style-3">
+                <div class="noto-content clearfix">
+                    <div class="form-checkbox">
+                        <input type="checkbox" value="" name=""> <span class="check"><i class="fa fa-check"></i></span>
+                    </div>
+                    <div class="noto-img">
+                        <a href="blog-detail-2.html">
+                            <img src="~/Images/NRGNetwork/ava_5.jpg" alt="" class="be-ava-comment">
+                        </a>
+                    </div>
+                    <div class="noto-text">
+                        <div class="noto-text-top">
+                            <span class="noto-name"><a href="blog-detail-2.html">Cüneyt ŞEN</a></span>
+                            <span class="noto-date"><i class="fa fa-clock-o"></i> May 27, 2015</span>
+                        </div>
+                        <div class="noto-message">Sed id erat vitae libero malesuada dictum vel sit amet eros</div>
+                    </div>
+                </div>
+            </div>
+            <div class="noto-entry style-3">
+                <div class="noto-content clearfix">
+                    <div class="form-checkbox">
+                        <input type="checkbox" value="" name=""> <span class="check"><i class="fa fa-check"></i></span>
+                    </div>
+                    <div class="noto-img">
+                        <a href="blog-detail-2.html">
+                            <img src="~/Images/NRGNetwork/ava_8.jpg" alt="" class="be-ava-comment">
+                        </a>
+                    </div>
+                    <div class="noto-text">
+                        <div class="noto-text-top">
+                            <span class="noto-name"><a href="blog-detail-2.html">Tomasz Mazurczak</a></span>
+                            <span class="noto-date"><i class="fa fa-clock-o"></i> May 27, 2015</span>
+                        </div>
+                        <div class="noto-message">In molestie libero quis cursus ullamcorper eu rhoncus maa</div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="col-xs-12 col-sm-7">
+        <div class="be-large-post">
+            <div class="info-block style-2">
+                <div class="be-large-post-align">
+                    <div class="info-block-right"><a class="settings" href="blog-detail-2.html"><i class="fa fa-cog"></i></a></div>
+                    <h3 class="info-block-label">Message with Louis Paquet</h3>
+                </div>
+            </div>
+            <div class="be-large-post-align">
+                <div class="be-comment">
+                    <div class="be-img-comment">
+                        <a href="blog-detail-2.html">
+                            <img src="~/Images/NRGNetwork/ava_3.jpg" alt="" class="be-ava-comment">
+                        </a>
+                    </div>
+                    <div class="be-comment-content">
+
+                        <span class="be-comment-name">
+                            <a href="blog-detail-2.html">Louis Paquet</a>
+                        </span>
+                        <span class="be-comment-time">
+                            <i class="fa fa-clock-o"></i>
+                            May 27, 2015 at 3:14am
+                        </span>
+
+                        <p class="be-comment-text">
+                            Nunc ornare sed dolor sed mattis. In scelerisque dui a arcu mattis, at maximus eros commodo. Cras magna nunc, cursus lobortis luctus at, sollicitudin vel neque turpis tristique blandit.
+                        </p>
+                    </div>
+                </div>
+                <div class="be-comment">
+                    <div class="be-img-comment">
+                        <a href="blog-detail-2.html">
+                            <img src="~/Images/NRGNetwork/ava_10.jpg" alt="" class="be-ava-comment">
+                        </a>
+                    </div>
+                    <div class="be-comment-content">
+
+                        <span class="be-comment-name">
+                            <a href="blog-detail-2.html">Leigh Taylor</a>
+                        </span>
+                        <span class="be-comment-time">
+                            <i class="fa fa-clock-o"></i>
+                            May 27, 2015 at 3:14am
+                        </span>
+
+                        <p class="be-comment-text">
+                            In molestie libero quis cursus ullamcorper. Sed id erat vitae libero malesuada
+                        </p>
+                    </div>
+                </div>
+                <div class="be-comment">
+                    <div class="be-img-comment">
+                        <a href="blog-detail-2.html">
+                            <img src="~/Images/NRGNetwork/ava_10.jpg" alt="" class="be-ava-comment">
+                        </a>
+                    </div>
+                    <div class="be-comment-content">
+
+                        <span class="be-comment-name">
+                            <a href="blog-detail-2.html">Leigh Taylor</a>
+                        </span>
+                        <span class="be-comment-time">
+                            <i class="fa fa-clock-o"></i>
+                            May 27, 2015 at 3:14am
+                        </span>
+
+                        <p class="be-comment-text">
+                            Fusce placerat quis lectus sit amet aliquam. In quis pulvinar ante, sed faucibus nibh. Etiam gravida tortor ut quam tincidunt consectetur. Cras pulvinar, sem vitae facilisis placerat, purus libero consequat erat. Nunc lacus est, convallis ac hendrerit ut
+                        </p>
+                    </div>
+                </div>
+                <div class="be-comment">
+                    <div class="be-img-comment">
+                        <a href="blog-detail-2.html">
+                            <img src="~/Images/NRGNetwork/ava_3.jpg" alt="" class="be-ava-comment">
+                        </a>
+                    </div>
+                    <div class="be-comment-content">
+
+                        <span class="be-comment-name">
+                            <a href="blog-detail-2.html">Louis Paquet</a>
+                        </span>
+                        <span class="be-comment-time">
+                            <i class="fa fa-clock-o"></i>
+                            May 27, 2015 at 3:14am
+                        </span>
+
+                        <p class="be-comment-text">
+                            Integer in augue at justo tempor vestibulum. Cras fringilla enim nec accumsan fermentum. Vestibulum sed tempor urna.
+
+                            Interdum et malesuada fames ac ante ipsum primis in faucibus.
+                        </p>
+                    </div>
+                </div>
+                <form>
+                    <div class="form-group">
+                        <div class="form-label">Your Message</div>
+                        <textarea class="form-input" required="" placeholder="Reply to Louise Paquet"></textarea>
+                    </div>
+                    <button class="btn btn-right color-1 size-2 hover-1">reply</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,89 @@
+﻿@using EuFaco.DataAccess.Models
+@model List<Publicacao>
+
+@{
+    ViewBag.Title = "Publicacoes";
+}
+
+@section scripts {
+    <script src="~/Scripts/jquery.event.move.js" type="text/javascript"></script>
+    <script src="~/Scripts/jquery.twentytwenty.js" type="text/javascript"></script>
+    <script>
+        $(window).load(function () {
+            $(".twentytwenty-container").twentytwenty();
+        });
+    </script>
+}
+<link rel="stylesheet" href="~/Content/twentytwenty.css" type="text/css" media="screen" />
+
+<div class="list-group" id="lista">
+
+    @if (Model.Count > 0)
+    {
+        foreach (Publicacao publicacao in Model)
+        {
+            switch (publicacao.Tipo)
+            {
+                case Publicacao.TipoPublicacao.PublicacaoImagem:
+                    PublicacaoImagem publicacaoImagem = publicacao as PublicacaoImagem;
+                    <a class="list-group-item" id="@String.Concat("publicacao", publicacaoImagem.Id)">
+                        <h4 class="list-group-item-heading">Usuário: @publicacaoImagem.Autor.Nome / E-mail: @publicacaoImagem.Autor.Email</h4>
+                        @*<input type="button" value="Abrir" onclick="@String.Format("seguir({0})", servico.Id)" />*@
+                        <p class="list-group-item-text">
+                            <h4>Imagem publicada em: @publicacaoImagem.DataHoraPublicado.ToString("dd/MM/yyyy HH:mm")</h4>
+                            <img src="@publicacaoImagem.Imagem.PathImagem" />
+                            <br>
+                            <span>@publicacaoImagem.Imagem.Legenda</span>
+                        </p>
+                    </a>
+                    break;
+                case Publicacao.TipoPublicacao.PublicacaoProjeto:
+                    PublicacaoProjeto publicacaoProjeto = publicacao as PublicacaoProjeto;
+                    <a class="list-group-item" id="@String.Concat("publicacao", publicacaoProjeto.Id)">
+                        <h4 class="list-group-item-heading">Autor: @publicacaoProjeto.Autor.Nome / E-mail: @publicacaoProjeto.Autor.Email</h4>
+                        @*<input type="button" value="Abrir" onclick="@String.Format("seguir({0})", servico.Id)" />*@
+                        <p class="list-group-item-text">
+                            <h4>@publicacaoProjeto.Titulo       / Publicado em: @publicacaoProjeto.DataHoraPublicado.ToString("dd/MM/yyyy HH:mm")</h4>
+                            @foreach (ItemPublicacao item in publicacaoProjeto.Conteudo)
+                            {
+                                if (item.Nome == "Paragrafo")
+                                {
+                                    <p>@item.Valor</p>
+                                }
+                                else if (item.Nome == "Imagem")
+                                {
+                                    <img src="@item.Valor" />
+                                }
+                            }
+                            <br>
+                        </p>
+                    </a>
+                    break;
+                case Publicacao.TipoPublicacao.PublicacaoAntesDepois:
+                    PublicacaoAntesDepois publicacaoAntesDepois = publicacao as PublicacaoAntesDepois;
+                    <a class="list-group-item" id="@String.Concat("publicacao", publicacaoAntesDepois.Id)">
+                        <h4 class="list-group-item-heading">Profissional: @publicacaoAntesDepois.Autor.Nome / E-mail: @publicacaoAntesDepois.Autor.Email</h4>
+                        @*<input type="button" value="Abrir" onclick="@String.Format("seguir({0})", servico.Id)" />*@
+                        <p class="list-group-item-text">
+                            <h4>@publicacaoAntesDepois.Titulo       / Publicado em: @publicacaoAntesDepois.DataHoraPublicado.ToString("dd/MM/yyyy HH:mm")</h4>
+                            <div class="twentytwenty-container">
+                                <img src="@publicacaoAntesDepois.PathImagemAntes" />
+                                <img src="@publicacaoAntesDepois.PathImagemDepois" />
+                            </div>
+                            <br />
+                            @publicacaoAntesDepois.Texto
+                            <br />
+                            </p>
+                        </a>
+                    break;
+            }
+        }
+    }
+</div>
+
+@*<script>
+    function seguir(n) {
+        var link = '/Servicos/Servico/' + n;
+        location.href = link;
+    }
+</script>*@
